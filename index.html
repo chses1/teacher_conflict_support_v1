@@ -45,9 +45,9 @@
     .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     .brand { display: flex; align-items: center; gap: 12px; }
     .logo {
-      width: 46px; height: 46px; border-radius: 16px;
-      background: linear-gradient(135deg, #2563eb, #7c3aed);
-      display: grid; place-items: center; color: white; font-size: 24px; box-shadow: var(--shadow);
+      width: 50px; height: 50px; border-radius: 50%;
+      display: block; object-fit: cover; background: white;
+      border: 2px solid #fff; box-shadow: var(--shadow);
     }
     h1 { font-size: clamp(22px, 4vw, 38px); margin: 0; letter-spacing: .02em; }
     .subtitle { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
@@ -82,14 +82,15 @@
     .warning {
       background: #fff7ed; border-color: #fed7aa;
     }
-    .grid { display: grid; gap: 14px; }
-    .grid.buttons { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .grid { display: grid; gap: 12px; }
+    .grid.buttons { grid-template-columns: repeat(2, minmax(0,1fr)); }
     .navbtn {
-      min-height: 108px; background: white; color: var(--ink); border: 1px solid var(--line); box-shadow: var(--shadow);
-      text-align: left; display: flex; flex-direction: column; gap: 6px; justify-content: center;
+      min-height: 88px; background: white; color: var(--ink); border: 1px solid var(--line); box-shadow: var(--shadow);
+      text-align: left; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 4px 10px;
+      align-content: center; align-items: center; padding: 14px 16px;
     }
-    .navbtn .icon { font-size: 28px; }
-    .navbtn .small { color: var(--muted); font-weight: 500; font-size: 13px; }
+    .navbtn .icon { grid-row: span 2; font-size: 30px; line-height: 1; }
+    .navbtn .small { color: var(--muted); font-weight: 600; font-size: 15px; line-height: 1.35; }
     section { margin-top: 20px; scroll-margin-top: 96px; }
     section h2 { margin: 0 0 12px; font-size: 26px; }
     .section-note { color: var(--muted); margin-top: -8px; }
@@ -187,7 +188,7 @@
       .wrap { padding: 14px; }
       .topbar { align-items: center; flex-wrap: wrap; }
       .brand { flex: 1 1 calc(100% - 96px); min-width: 0; }
-      .logo { width: 40px; height: 40px; border-radius: 14px; font-size: 21px; }
+      .logo { width: 44px; height: 44px; }
       .subtitle { font-size: 13px; }
       .mobile-menu-toggle { display: inline-flex; }
       .toolbar {
@@ -195,6 +196,7 @@
       }
       .toolbar.open { display: flex; }
       .toolbar button { width: 100%; text-align: left; }
+      .navbtn { min-height: 82px; padding: 13px 14px; }
       section { scroll-margin-top: 128px; }
     }
     @media print {
@@ -211,9 +213,9 @@
   <header>
     <div class="wrap topbar">
       <div class="brand">
-        <div class="logo">🛡️</div>
+        <img class="logo" src="中山國小.jpg" alt="中山國小校徽" />
         <div>
-          <h1>教師安心事件支援系統 v1</h1>
+          <h1>中山國小教師支援系統</h1>
           <p class="subtitle">協助第一線教師完成安全處置、客觀紀錄、家長溝通與諮詢準備。</p>
         </div>
       </div>
@@ -243,14 +245,14 @@
     <div id="home" class="page active">
     <div class="hero">
       <div class="card">
-        <span class="pill">本機版・無需登入・不自動上傳</span>
-        <h2 style="margin-top:12px">當校園衝突發生時，先保護人，再處理事情。</h2>
+        <span class="pill">本機版・無需登入・不自動上傳，可安心使用</span>
+        <h2 style="margin-top:12px">衝突發生時，請先保護人，再處理事情。</h2>
         <p>請選擇一個分頁進入：您可以先穩住現場並紀錄事件後，進行AI法律諮詢及自我內在對話。</p>
         <div class="grid buttons">
           <button class="navbtn" onclick="switchPage('phrases')"><span class="icon">🗣️</span>話術卡<span class="small">現場降溫與安全界線</span></button>
-          <button class="navbtn" onclick="switchPage('record')"><span class="icon">📝</span>事件紀錄<span class="small">紀錄、家長通知、行政協助</span></button>
-          <button class="navbtn" onclick="switchPage('law')"><span class="icon">⚖️</span>法律諮詢<span class="small">整理 Google AI 搜尋提問</span></button>
-          <button class="navbtn" onclick="switchPage('support')"><span class="icon">💬</span>教師支持<span class="small">整理情緒與下一步</span></button>
+          <button class="navbtn" onclick="switchPage('record')"><span class="icon">📝</span>事件紀錄<span class="small">紀錄、家長通知、行政通報</span></button>
+          <button class="navbtn" onclick="switchPage('law')"><span class="icon">⚖️</span>法律諮詢<span class="small">使用Google AI搜尋判例</span></button>
+          <button class="navbtn" onclick="switchPage('support')"><span class="icon">💬</span>教師支持<span class="small">使用Google AI整理情緒</span></button>
         </div>
       </div>
       <div class="card warning">
@@ -260,7 +262,7 @@
           <li>事件紀錄建議用座號或代稱，不輸入學生全名、身分證字號、診斷名稱。</li>
           <li>高衝突、威脅或肢體事件，避免老師單獨處理。</li>
           <li>有受傷或物品損壞，請留下照片、護理紀錄、收據或行政到場紀錄。</li>
-          <li>輸出文字請老師再次確認，不要捏造不存在的事實或證據。</li>
+          <li>表單內容只在使用期間暫存；關閉、離開或重新整理網頁後會自動清除。</li>
         </ul>
       </div>
     </div>
@@ -390,6 +392,7 @@
       <h3>教育部相關法條</h3>
       <p class="section-note">以下連結至教育部主管法規共用系統，送出紀錄、通報或諮詢前，請以官方頁面最新內容為準。</p>
       <div class="search-links">
+        <a class="search-link" href="https://www.chses.tyc.edu.tw/WebAdmin/%E5%AD%B8%E5%8B%99%E8%99%95/%E7%94%9F%E6%95%99%E7%B5%84/%E7%B6%B2%E9%A0%81%E4%B8%8A%E5%82%B3/%E6%95%99%E5%B8%AB%E8%BC%94%E5%B0%8E%E8%88%87%E7%AE%A1%E6%95%99%E5%AD%B8%E7%94%9F%E8%BE%A6%E6%B3%95/1130306%E4%B8%AD%E5%B1%B1%E5%9C%8B%E5%B0%8F%E6%95%99%E5%B8%AB%E8%BC%94%E5%B0%8E%E8%88%87%E7%AE%A1%E6%95%99%E5%AD%B8%E7%94%9F%E8%BE%A6%E6%B3%95.pdf" target="_blank" rel="noopener">桃園市中山國小教師輔導與管教學生辦法<span>校務會議通過日期：2024-03-06。優先查核校內輔導管教依據與處理程序。</span></a>
         <a class="search-link" href="https://edu.law.moe.gov.tw/LawContent.aspx?id=GL002147" target="_blank" rel="noopener">教師輔導與管教學生辦法注意事項<span>修正日期：2024-02-05。查核管教、處罰、體罰、不當管教與校內辦法依據。</span></a>
         <a class="search-link" href="https://edu.law.moe.gov.tw/LawContent.aspx?id=FL028684" target="_blank" rel="noopener">校園安全及災害事件通報作業要點<span>修正日期：2023-11-30。查核校安事件類別、通報屬性與通報時限。</span></a>
         <a class="search-link" href="https://edu.law.moe.gov.tw/LawContent.aspx?id=GL000683" target="_blank" rel="noopener">校園霸凌防制準則<span>修正日期：2024-04-17。查核疑似霸凌、調和、調查與學校處理程序。</span></a>
@@ -417,7 +420,7 @@
   </main>
 
   <footer>
-    <p>教師安心事件支援系統 v1｜本工具僅供校園事件紀錄、溝通與諮詢準備參考，不取代正式校內程序、主管機關判斷或法律專業意見。</p>
+    <p>中山國小教師支援系統｜本工具僅供校園事件紀錄、溝通與諮詢參考，不取代正式校內程序、主管機關判斷或法律專業意見。</p>
   </footer>
   <div id="toast" class="toast">已複製</div>
 
@@ -468,9 +471,19 @@
     setTimeout(() => t.classList.remove('show'), 1800);
   }
 
+  function writeClipboard(text, successText) {
+    if (!navigator.clipboard?.writeText) {
+      showToast('請手動複製結果框文字');
+      return;
+    }
+    navigator.clipboard.writeText(text)
+      .then(() => showToast(successText))
+      .catch(() => showToast('請手動複製結果框文字'));
+  }
+
   function copyText(id) {
     const text = $(id).innerText || $(id).textContent || '';
-    navigator.clipboard.writeText(text).then(() => showToast('已複製到剪貼簿'));
+    writeClipboard(text, '已複製到剪貼簿');
   }
 
   function downloadText(id, filename) {
@@ -564,7 +577,7 @@
   function openGoogleAiMode() {
     const prompt = googleAiModePrompt();
     $('caseSearchOutput').innerText = `【Google AI Mode 提問已複製】\n\n${prompt}\n\n操作方式：\n1. 已將上方提問複製到剪貼簿。\n2. Google AI Mode 開啟後，貼上提問並送出。\n3. 若看不到 AI Mode，請改用一般 Google 搜尋或 Gemini，並貼上同一段提問。`;
-    navigator.clipboard.writeText(prompt).then(() => showToast('已複製 AI Mode 提問'));
+    writeClipboard(prompt, '已複製 AI Mode 提問');
     window.open('https://www.google.com/ai', '_blank', 'noopener');
   }
 
@@ -576,7 +589,7 @@
   function openGoogleAiParentNotice() {
     const prompt = googleAiParentNoticePrompt();
     $('recordOutput').innerText = `【Google AI 模式家長通知提示詞已複製】\n\n${prompt}\n\n操作方式：\n1. 已將上方提示詞複製到剪貼簿。\n2. Google AI Mode 開啟後，貼上提示詞並送出。\n3. 回貼給家長前，請再次確認內容沒有新增事實，也沒有學生可識別個資。`;
-    navigator.clipboard.writeText(prompt).then(() => showToast('已複製 Google AI 家長通知提示詞'));
+    writeClipboard(prompt, '已複製 Google AI 家長通知提示詞');
     window.open('https://www.google.com/ai', '_blank', 'noopener');
   }
 
@@ -588,7 +601,7 @@
   function openTeacherSupport() {
     const prompt = teacherSupportPrompt();
     $('supportOutput').innerText = `【Google AI 心理支持提示詞已複製】\n\n${prompt}\n\n重要提醒：AI 只能協助整理情緒與提供支持，不能取代心理師、諮商師或醫療協助。若出現自傷念頭、強烈崩潰或長期失眠，請立即找可信任的人陪同，或撥打 1925 安心專線。`;
-    navigator.clipboard.writeText(prompt).then(() => showToast('已複製心理支持提示詞'));
+    writeClipboard(prompt, '已複製心理支持提示詞');
     window.open('https://www.google.com/ai', '_blank', 'noopener');
   }
 
@@ -596,6 +609,11 @@
     document.querySelectorAll('#checklist input[type="checkbox"]').forEach(c => c.checked = false);
     localStorage.removeItem('teacherSupportChecks');
     showToast('已清空勾選');
+  }
+
+  function clearSavedState() {
+    localStorage.removeItem('teacherSupportV1');
+    localStorage.removeItem('teacherSupportChecks');
   }
 
   function saveState() {
@@ -617,6 +635,8 @@
 
   fields.forEach(id => $(id)?.addEventListener('input', saveState));
   document.querySelectorAll('#checklist input').forEach(c => c.addEventListener('change', saveState));
+  window.addEventListener('pagehide', clearSavedState);
+  window.addEventListener('beforeunload', clearSavedState);
   loadState();
 </script>
 </body>
