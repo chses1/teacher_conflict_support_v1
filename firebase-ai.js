@@ -13,13 +13,13 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyADPOBd0OgGGwxuiiJtPzFT8pyCVv7n47s",
-  authDomain: "teacher-conflict-support.firebaseapp.com",
-  projectId: "teacher-conflict-support",
-  storageBucket: "teacher-conflict-support.firebasestorage.app",
-  messagingSenderId: "1047946809859",
-  appId: "1:1047946809859:web:801ed2ee35a0bdaea4f436",
-  measurementId: "G-J4BT7NF76C"
+  apiKey: "AIzaSyB3rXWIPLlsnR6KOk_mEMygwKLoiXv80CI",
+  authDomain: "gen-lang-client-0649238276.firebaseapp.com",
+  projectId: "gen-lang-client-0649238276",
+  storageBucket: "gen-lang-client-0649238276.firebasestorage.app",
+  messagingSenderId: "850568700942",
+  appId: "1:850568700942:web:b7c0a06a204f242943085f",
+  measurementId: "G-NHDCFLJV7S"
 };
 
 const functionRegion = "asia-east1";
