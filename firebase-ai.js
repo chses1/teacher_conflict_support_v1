@@ -4,6 +4,7 @@ import {
   getAuth,
   getRedirectResult,
   onAuthStateChanged,
+  signInWithPopup,
   signInWithRedirect,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
@@ -53,6 +54,15 @@ function friendlyAuthError(error) {
   if (code.includes("unauthorized-domain")) {
     return "目前網址尚未加入 Firebase 授權網域。請到 Firebase Authentication > Settings > Authorized domains 加入此測試網址或正式網域。";
   }
+  if (code.includes("popup-blocked")) {
+    return "登入視窗被瀏覽器阻擋，請允許彈出視窗後再試。";
+  }
+  if (code.includes("popup-closed-by-user")) {
+    return "登入視窗已關閉，尚未完成登入。";
+  }
+  if (code.includes("operation-not-supported-in-this-environment")) {
+    return "目前瀏覽環境不支援此登入方式，請改用一般視窗或允許第三方 Cookie。";
+  }
   return error?.message || "請確認 Firebase Google 登入與授權網域設定。";
 }
 
@@ -95,8 +105,18 @@ async function signInWithSchoolAccount(auth, provider) {
       hd: allowedEmailDomain,
       prompt: "select_account"
     });
-    await signInWithRedirect(auth, provider);
+    await signInWithPopup(auth, provider);
   } catch (error) {
+    const code = error?.code || "";
+    if (code.includes("popup-blocked") || code.includes("cancelled-popup-request")) {
+      try {
+        await signInWithRedirect(auth, provider);
+        return;
+      } catch (redirectError) {
+        setStatus(`登入失敗：${friendlyAuthError(redirectError)}`);
+        return;
+      }
+    }
     setStatus(`登入失敗：${friendlyAuthError(error)}`);
   }
 }
@@ -130,9 +150,13 @@ if (!configured) {
   signInButton?.addEventListener("click", () => signInWithSchoolAccount(auth, provider));
   signOutButton?.addEventListener("click", () => signOut(auth));
   verifyAiButton?.addEventListener("click", verifyApiKey);
-  getRedirectResult(auth).catch((error) => {
-    setStatus(`登入失敗：${friendlyAuthError(error)}`);
-  });
+  getRedirectResult(auth)
+    .then((result) => {
+      if (result?.user) setStatus(`已登入：${userName(result.user)}`);
+    })
+    .catch((error) => {
+      setStatus(`登入失敗：${friendlyAuthError(error)}`);
+    });
 
   onAuthStateChanged(auth, (user) => {
     currentUser = user;
