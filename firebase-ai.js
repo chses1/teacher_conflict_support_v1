@@ -49,6 +49,20 @@ function show(el, visible) {
   el?.classList.toggle("hidden", !visible);
 }
 
+function friendlyAuthError(error) {
+  const code = error?.code || "";
+  if (code.includes("unauthorized-domain")) {
+    return "目前網址尚未加入 Firebase 授權網域。請到 Firebase Authentication > Settings > Authorized domains 加入此測試網址或正式網域。";
+  }
+  if (code.includes("popup-blocked")) {
+    return "登入視窗被瀏覽器阻擋，系統將改用整頁登入。";
+  }
+  if (code.includes("popup-closed-by-user")) {
+    return "登入視窗已關閉，尚未完成登入。";
+  }
+  return error?.message || "請確認 Firebase Google 登入與授權網域設定。";
+}
+
 function userName(user) {
   return user?.displayName || user?.email || "已登入";
 }
@@ -96,7 +110,7 @@ async function signInWithSchoolAccount(auth, provider) {
       await signInWithRedirect(auth, provider);
       return;
     }
-    setStatus(`登入失敗：${error?.message || "請確認 Firebase Google 登入與授權網域設定。"}`);
+    setStatus(`登入失敗：${friendlyAuthError(error)}`);
   }
 }
 
@@ -130,7 +144,7 @@ if (!configured) {
   signOutButton?.addEventListener("click", () => signOut(auth));
   verifyAiButton?.addEventListener("click", verifyApiKey);
   getRedirectResult(auth).catch((error) => {
-    setStatus(`登入失敗：${error?.message || "請確認 Firebase Google 登入與授權網域設定。"}`);
+    setStatus(`登入失敗：${friendlyAuthError(error)}`);
   });
 
   onAuthStateChanged(auth, (user) => {

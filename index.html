@@ -55,17 +55,14 @@
     h1 { font-size: clamp(24px, 2.2vw, 36px); margin: 0; letter-spacing: .02em; white-space: nowrap; }
     .subtitle { margin: 4px 0 0; color: var(--muted); font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .toolbar { display: flex; gap: 8px; flex-wrap: nowrap; justify-content: flex-end; white-space: nowrap; }
-    .auth-panel {
-      display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; justify-content: flex-end;
-      min-width: 0; white-space: nowrap;
-    }
+    .auth-panel { display: contents; }
     .auth-status {
       color: var(--muted); font-size: 13px; font-weight: 700;
       background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px;
       max-width: 360px; overflow: hidden; text-overflow: ellipsis;
     }
     .auth-status.is-visible { display: inline-flex !important; }
-    .auth-panel button { padding: 8px 10px; font-size: 13px; box-shadow: none; }
+    .auth-panel button { box-shadow: none; }
     .hidden { display: none !important; }
     .mobile-menu-toggle { display: none; align-items: center; gap: 8px; white-space: nowrap; }
     .menu-icon {
@@ -249,12 +246,12 @@
         <button class="ghost" data-page-button="record" onclick="switchPage('record')">事件紀錄</button>
         <button class="ghost" data-page-button="law" onclick="switchPage('law')">法律諮詢</button>
         <button class="ghost" data-page-button="support" onclick="switchPage('support')">教師支持</button>
-      </div>
-      <div class="auth-panel" aria-label="AI 登入狀態">
-        <span id="aiStatus" class="auth-status hidden" role="status" aria-live="polite"></span>
         <button id="signInButton" class="ghost hidden" type="button">Google 登入</button>
         <button id="verifyAiButton" class="ghost hidden" type="button">驗證 API</button>
         <button id="signOutButton" class="ghost hidden" type="button">登出</button>
+      </div>
+      <div class="auth-panel" aria-label="AI 登入狀態">
+        <span id="aiStatus" class="auth-status hidden" role="status" aria-live="polite"></span>
       </div>
     </div>
   </header>
