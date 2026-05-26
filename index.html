@@ -52,6 +52,16 @@
     h1 { font-size: clamp(22px, 4vw, 38px); margin: 0; letter-spacing: .02em; }
     .subtitle { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
     .toolbar { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .auth-panel {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end;
+      padding: 8px 0 0;
+    }
+    .auth-status {
+      color: var(--muted); font-size: 13px; font-weight: 700;
+      background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px;
+    }
+    .auth-panel button { padding: 8px 10px; font-size: 13px; box-shadow: none; }
+    .hidden { display: none !important; }
     .mobile-menu-toggle { display: none; align-items: center; gap: 8px; white-space: nowrap; }
     .menu-icon {
       width: 18px; height: 14px; display: inline-flex; flex-direction: column; justify-content: space-between;
@@ -122,6 +132,7 @@
     textarea { min-height: 92px; resize: vertical; }
     input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
     .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
+    .time-grid { display: grid; grid-template-columns: 1.4fr .8fr .8fr; gap: 12px 16px; }
     .form-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
     .output {
       white-space: pre-wrap; background: #0f172a; color: #e5e7eb; border-radius: 18px; padding: 16px;
@@ -183,7 +194,7 @@
     }
     .toast.show { opacity: 1; transform: translateY(0); }
     @media (max-width: 900px) {
-      .hero, .levels, .grid.buttons, .phrase-grid, .form-grid, .two-col, .law-grid, .search-links, .steps { grid-template-columns: 1fr; }
+      .hero, .levels, .grid.buttons, .phrase-grid, .form-grid, .time-grid, .two-col, .law-grid, .search-links, .steps { grid-template-columns: 1fr; }
       .checklist { columns: 1; }
       .wrap { padding: 14px; }
       .topbar { align-items: center; flex-wrap: wrap; }
@@ -196,6 +207,7 @@
       }
       .toolbar.open { display: flex; }
       .toolbar button { width: 100%; text-align: left; }
+      .auth-panel { width: 100%; justify-content: flex-start; }
       .navbtn { min-height: 82px; padding: 13px 14px; }
       section { scroll-margin-top: 128px; }
     }
@@ -230,6 +242,12 @@
         <button class="ghost" data-page-button="law" onclick="switchPage('law')">法律諮詢</button>
         <button class="ghost" data-page-button="support" onclick="switchPage('support')">教師支持</button>
       </div>
+      <div class="auth-panel" aria-label="AI 登入狀態">
+        <span id="aiStatus" class="auth-status">AI 模式：未設定 Firebase</span>
+        <button id="signInButton" class="ghost hidden" type="button">Google 登入</button>
+        <button id="verifyAiButton" class="ghost hidden" type="button">驗證 API</button>
+        <button id="signOutButton" class="ghost hidden" type="button">登出</button>
+      </div>
     </div>
   </header>
 
@@ -245,14 +263,14 @@
     <div id="home" class="page active">
     <div class="hero">
       <div class="card">
-        <span class="pill">本機版・無需登入・不自動上傳，可安心使用</span>
+        <span class="pill">本機版可用・Firebase 登入後可啟用頁內 AI</span>
         <h2 style="margin-top:12px">衝突發生時，請先保護人，再處理事情。</h2>
         <p>請選擇一個分頁進入：您可以先穩住現場並紀錄事件後，進行AI法律諮詢及自我內在對話。</p>
         <div class="grid buttons">
           <button class="navbtn" onclick="switchPage('phrases')"><span class="icon">🗣️</span>話術卡<span class="small">現場降溫與安全界線</span></button>
           <button class="navbtn" onclick="switchPage('record')"><span class="icon">📝</span>事件紀錄<span class="small">紀錄、家長通知、行政通報</span></button>
-          <button class="navbtn" onclick="switchPage('law')"><span class="icon">⚖️</span>法律諮詢<span class="small">使用Google AI搜尋判例</span></button>
-          <button class="navbtn" onclick="switchPage('support')"><span class="icon">💬</span>教師支持<span class="small">使用Google AI整理情緒</span></button>
+          <button class="navbtn" onclick="switchPage('law')"><span class="icon">⚖️</span>法律諮詢<span class="small">登入後頁內整理案例</span></button>
+          <button class="navbtn" onclick="switchPage('support')"><span class="icon">💬</span>教師支持<span class="small">登入後頁內整理情緒</span></button>
         </div>
       </div>
       <div class="card warning">
@@ -347,24 +365,23 @@
 
     <section id="record" class="card page">
       <h2>📝 事件紀錄產生器</h2>
-      <p class="section-note">請盡量寫具體事實：時間、地點、學生說了什麼、做了什麼、老師如何處理。</p>
-      <div class="form-grid">
+      <p class="section-note">依校安事件通報單簡化欄位：時間、地點、關係人、事件原因與經過、老師處理情形。請使用學生代稱或班級座號，避免輸入可識別個資。</p>
+      <div class="time-grid">
         <div><label>日期</label><input id="date" type="date" /></div>
-        <div><label>時間／節次</label><input id="period" placeholder="例：第三節、10:15左右" /></div>
-        <div><label>地點</label><input id="location" placeholder="例：五年三班教室" /></div>
-        <div><label>班級／學生代稱</label><input id="student" placeholder="例：五年三班某學生、座號○○" /></div>
-        <div><label>事件類型</label><select id="eventType"><option>一般不服管教</option><option>言語頂撞／辱罵</option><option>威脅</option><option>摔物／拍桌／踢椅</option><option>肢體推擠</option><option>攻擊教師</option><option>攻擊同學</option><option>破壞物品</option><option>家長後續爭議</option><option>其他</option></select></div>
-        <div><label>教師角色</label><select id="teacherRole"><option>導師</option><option>科任教師</option><option>代課教師</option><option>行政教師</option><option>其他</option></select></div>
+        <div><label>時</label><input id="hour" inputmode="numeric" maxlength="2" placeholder="例：10" /></div>
+        <div><label>分</label><input id="minute" inputmode="numeric" maxlength="2" placeholder="例：15" /></div>
       </div>
-      <label>事件前因</label><textarea id="cause" placeholder="例：教師提醒學生收起平板並回到課堂活動。"></textarea>
-      <label>學生具體言行</label><textarea id="behavior" placeholder="例：學生大聲說『你很煩』，並拍桌、踢動椅子。"></textarea>
-      <label>教師當下處置</label><textarea id="teacherAction" placeholder="例：教師請其他學生保持距離，並請班長到學務處找主任協助。"></textarea>
-      <label>後續處理／證據紀錄</label><textarea id="followup" placeholder="例：主任到場協助，學生被帶至辦公室冷靜；教室有監視器，無人受傷。"></textarea>
-      <h3>Google AI 家長通知操作步驟</h3>
+      <div class="form-grid">
+        <div><label>地點</label><input id="location" placeholder="例：五年三班教室" /></div>
+        <div><label>事件關係人</label><input id="student" placeholder="例：五年三班某學生、座號○○；若人數多可用班級座號表示" /></div>
+      </div>
+      <label>事件原因與經過</label><textarea id="incidentProcess" placeholder="例：教師提醒學生收起平板並回到課堂活動，學生大聲回應並拍桌、踢動椅子，影響課堂秩序。"></textarea>
+      <label>老師處理情形</label><textarea id="teacherAction" placeholder="例：教師先請其他學生保持距離，安撫現場情緒，並請班長至學務處通知主任協助；後續由行政帶離冷靜並完成紀錄。"></textarea>
+      <h3>AI 家長通知操作步驟</h3>
       <div class="steps">
         <div class="step"><strong>1. 先填紀錄</strong>填完上方事件欄位，盡量使用客觀事實與學生代稱。</div>
-        <div class="step"><strong>2. 按家長通知</strong>系統會複製提示詞，並開啟 Google AI Mode。</div>
-        <div class="step"><strong>3. 貼上再確認</strong>把提示詞貼上送出，回貼家長前刪除個資並確認沒有新增事實。</div>
+        <div class="step"><strong>2. 按家長通知</strong>登入後會直接產生草稿；未設定 AI 時會複製提示詞並開啟 Google AI Mode。</div>
+        <div class="step"><strong>3. 送出前確認</strong>回貼家長前刪除個資，並確認沒有新增事實。</div>
       </div>
       <div class="form-actions">
         <button onclick="generateRecord('formal')">事件紀錄</button>
@@ -378,17 +395,17 @@
 
     <section id="law" class="card page">
       <h2>⚖️ 國內判決搜尋輔助</h2>
-      <p class="section-note">依上方事件紀錄自動整理搜尋語。搜尋時會避開學生代稱與可識別個資，只使用事件類型、行為、教師處置與程序關鍵字。</p>
-      <h3>Google AI 法律諮詢準備步驟</h3>
+      <p class="section-note">依上方校安通報欄位自動整理搜尋語。搜尋時請避免輸入學生姓名等可識別個資，並以事件經過、老師處理情形與程序關鍵字為主。</p>
+      <h3>AI 法律諮詢準備步驟</h3>
       <div class="steps">
         <div class="step"><strong>1. 先完成事件紀錄</strong>到「事件紀錄」分頁填寫事實，尤其是時間、地點、具體言行與處置。</div>
-        <div class="step"><strong>2. 產生搜尋提問</strong>按下 Google AI 模式搜尋，系統會複製去識別化的提問。</div>
+        <div class="step"><strong>2. 產生搜尋提問</strong>登入後會直接整理案例；未設定 AI 時會複製去識別化提問。</div>
         <div class="step"><strong>3. 帶著結果諮詢</strong>把 AI 整理的相似案例，交給行政、教師會或律師確認，避免自行下結論。</div>
       </div>
       <div class="form-actions">
-        <button onclick="openGoogleAiMode()">Google AI 模式搜尋</button>
+        <button onclick="openGoogleAiMode()">AI 案例整理</button>
       </div>
-      <div id="caseSearchOutput" class="output light">請先填寫事件紀錄，按下 Google AI 模式搜尋後，系統會複製完整提問並開啟 Google AI Mode。</div>
+      <div id="caseSearchOutput" class="output light">請先填寫事件紀錄。登入並設定 Firebase 後可在本頁整理案例；未設定時會複製完整提問並開啟 Google AI Mode。</div>
       <h3>教育部相關法條</h3>
       <p class="section-note">以下連結至教育部主管法規共用系統，送出紀錄、通報或諮詢前，請以官方頁面最新內容為準。</p>
       <div class="search-links">
@@ -403,18 +420,18 @@
 
     <section id="support" class="card page">
       <h2>💬 教師心理支持</h2>
-      <p class="section-note">把事件紀錄整理成 Google AI Mode 的心理支持提示詞，協助老師先被接住、整理委屈與下一步。AI 不能取代心理師或正式諮商。</p>
-      <h3>Google AI 支持提示詞操作步驟</h3>
+      <p class="section-note">把事件紀錄整理成心理支持提示詞或頁內 AI 回覆，協助老師先被接住、整理委屈與下一步。AI 不能取代心理師或正式諮商。</p>
+      <h3>AI 支持提示詞操作步驟</h3>
       <div class="steps">
         <div class="step"><strong>1. 先填事件輪廓</strong>可先到「事件紀錄」分頁填基本事實，不需要寫得很完美。</div>
-        <div class="step"><strong>2. 按心理支持</strong>系統會複製一段較安全的支持提示詞，並開啟 Google AI Mode。</div>
+        <div class="step"><strong>2. 按心理支持</strong>登入後會直接產生支持回覆；未設定 AI 時會複製提示詞並開啟 Google AI Mode。</div>
         <div class="step"><strong>3. 補上感受</strong>貼上後，在最後補一句「我現在最難受的是……」，讓回覆更貼近當下。</div>
       </div>
       <div class="form-actions">
-        <button onclick="openTeacherSupport()">Google AI 心理支持</button>
+        <button onclick="openTeacherSupport()">AI 心理支持</button>
         <button class="secondary" onclick="copyText('supportOutput')">複製提示詞</button>
       </div>
-      <div id="supportOutput" class="output light">請先填寫事件紀錄，按下 Google AI 心理支持後，系統會複製提示詞並開啟 Google AI Mode。若有強烈崩潰、自傷念頭或長期失眠，請立即找真人協助，台灣可撥打 1925 安心專線。</div>
+      <div id="supportOutput" class="output light">請先填寫事件紀錄。登入並設定 Firebase 後可在本頁產生支持回覆；未設定時會複製提示詞並開啟 Google AI Mode。若有強烈崩潰、自傷念頭或長期失眠，請立即找真人協助，台灣可撥打 1925 安心專線。</div>
     </section>
 
   </main>
@@ -426,7 +443,7 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const fields = ['date','period','location','student','eventType','teacherRole','cause','behavior','teacherAction','followup'];
+  const fields = ['date','hour','minute','location','student','incidentProcess','teacherAction'];
 
   function todayISO() {
     const d = new Date();
@@ -466,6 +483,13 @@
   function val(id) { return ($(id)?.value || '').trim(); }
   function safe(v, fallback='未填寫') { return v && v.length ? v : fallback; }
 
+  function normalizedClockTime() {
+    const h = val('hour');
+    const m = val('minute');
+    if (!h && !m) return '○時○分';
+    return `${h || '○'}時${m || '○'}分`;
+  }
+
   function showToast(text='已複製') {
     const t = $('toast'); t.textContent = text; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 1800);
@@ -499,15 +523,11 @@
   function baseData() {
     return {
       date: safe(val('date'), '○年○月○日'),
-      period: safe(val('period'), '○時○分／第○節'),
+      time: normalizedClockTime(),
       location: safe(val('location'), '○○地點'),
-      student: safe(val('student'), '某學生'),
-      eventType: safe(val('eventType'), '校園衝突事件'),
-      teacherRole: safe(val('teacherRole'), '教師'),
-      cause: safe(val('cause'), '因課堂規範或現場狀況需要教師介入提醒'),
-      behavior: safe(val('behavior'), '學生出現影響課堂秩序或現場安全之言行'),
-      teacherAction: safe(val('teacherAction'), '教師以維護現場安全與教學秩序為優先，並視情況請行政或輔導人員協助'),
-      followup: safe(val('followup'), '後續處理與相關紀錄待補充')
+      student: safe(val('student'), '某學生或相關人員'),
+      incidentProcess: safe(val('incidentProcess'), '事件原因與經過待補充'),
+      teacherAction: safe(val('teacherAction'), '老師處理情形待補充')
     };
   }
 
@@ -551,9 +571,9 @@
     const d = baseData();
     let text = '';
     if (type === 'formal') {
-      text = `【校園事件客觀紀錄】\n\n一、時間：${d.date}，${d.period}\n二、地點：${d.location}\n三、涉及對象：${d.student}\n四、教師角色：${d.teacherRole}\n五、事件類型：${d.eventType}\n\n六、事件前因：\n${d.cause}\n\n七、學生具體言行：\n${d.behavior}\n\n八、教師當下處置：\n${d.teacherAction}\n\n九、後續處理與證據紀錄：\n${d.followup}\n\n備註：本紀錄以客觀描述為原則，避免使用情緒性、推測性或羞辱性文字。若涉及人身安全、受傷、物品損壞或管教衝突，建議由學校行政依校內程序確認後續處理。`;
+      text = `【校園事件客觀紀錄】\n\n一、事件發生時間：${d.date}，${d.time}\n二、事件發生地點：${d.location}\n三、事件關係人：${d.student}\n\n四、事件原因與經過：\n${d.incidentProcess}\n\n五、老師處理情形：\n${d.teacherAction}\n\n備註：本紀錄以客觀描述為原則，避免使用情緒性、推測性或羞辱性文字。若涉及人身安全、受傷、物品損壞或管教衝突，建議由學校行政依校內程序確認後續處理。`;
     } else {
-      text = `【校安事件通報單貼上版】\n\n事件發生時間\n日期：${d.date}\n時間／節次：${d.period}\n\n事件發生地點\n${d.location}\n\n事件關係人\n${d.student}\n\n事件原因與經過\n事件類型：${d.eventType}\n${d.cause}\n${d.behavior}\n\n老師處理情形\n${d.teacherAction}\n${d.followup}\n\n提醒：此文字供貼入校安事件通報單欄位使用。送出校安通報後，請依學校流程通知生教組或承辦行政人員。`;
+      text = `【校安事件通報單貼上版】\n\n事件發生時間\n日期：${d.date}\n時：${val('hour') || '○'}\n分：${val('minute') || '○'}\n\n事件發生地點\n${d.location}\n\n事件關係人\n${d.student}\n\n事件原因與經過\n${d.incidentProcess}\n\n老師處理情形\n${d.teacherAction}\n\n提醒：此文字供貼入校安事件通報單欄位使用。校安通報完成後，請依校內流程通知生教組或承辦行政人員。`;
     }
     $('recordOutput').innerText = text;
   }
@@ -562,47 +582,84 @@
     const d = baseData();
     return {
       ...d,
-      cause: neutralizeForParent(d.cause),
-      behavior: neutralizeForParent(d.behavior),
-      teacherAction: neutralizeForParent(d.teacherAction),
-      followup: neutralizeForParent(d.followup)
+      incidentProcess: neutralizeForParent(d.incidentProcess),
+      teacherAction: neutralizeForParent(d.teacherAction)
     };
   }
 
   function googleAiModePrompt() {
     const d = neutralizedRecordData();
-    return `請以台灣資料為主，搜尋與以下校園事件情境相似的新聞、法院判決、教育行政案例或法律實務文章，並整理來源連結。請不要直接下法律結論，請比較事實相似與不同之處。\n\n事件類型：${d.eventType}\n事件前因：${d.cause}\n學生具體言行：${d.behavior}\n教師處置：${d.teacherAction}\n後續處理：${d.followup}\n\n請用以下格式回答：\n1. 最相似的新聞或案例 3 到 5 則，附來源連結與日期。\n2. 若有相關法院判決，列出法院、案號或可搜尋關鍵字、主要爭點。\n3. 每則案例與本事件相似處／不同處。\n4. 老師諮詢行政、教師會或律師時應追問的問題。\n5. 哪些地方不能直接類推。`;
+    return `請以台灣資料為主，搜尋與以下校園事件情境相似的新聞、法院判決、教育行政案例或法律實務文章，並整理來源連結。請不要直接下法律結論，請比較事實相似與不同之處。\n\n事件發生時間：${d.date}，${d.time}\n事件發生地點：${d.location}\n事件關係人：${d.student}\n事件原因與經過：${d.incidentProcess}\n老師處理情形：${d.teacherAction}\n\n請用以下格式回答：\n1. 最相似的新聞或案例 3 到 5 則，附來源連結與日期。\n2. 若有相關法院判決，列出法院、案號或可搜尋關鍵字、主要爭點。\n3. 每則案例與本事件相似處／不同處。\n4. 老師諮詢行政、教師會或律師時應追問的問題。\n5. 哪些地方不能直接類推。`;
   }
 
-  function openGoogleAiMode() {
-    const prompt = googleAiModePrompt();
-    $('caseSearchOutput').innerText = `【Google AI Mode 提問已複製】\n\n${prompt}\n\n操作方式：\n1. 已將上方提問複製到剪貼簿。\n2. Google AI Mode 開啟後，貼上提問並送出。\n3. 若看不到 AI Mode，請改用一般 Google 搜尋或 Gemini，並貼上同一段提問。`;
-    writeClipboard(prompt, '已複製 AI Mode 提問');
+  async function runAiOrFallback(options) {
+    const { prompt, outputId, successTitle, fallbackText, fallbackToast, loadingText } = options;
+    const ai = window.teacherAi;
+    if (ai?.canGenerate?.()) {
+      try {
+        $(outputId).innerText = loadingText || 'AI 正在整理中，請稍候。';
+        const result = await ai.generateText(prompt);
+        const quotaNote = result.quota ? `\n\n今日頁內 AI 剩餘次數：${result.quota.remaining}/${result.quota.limit}` : '';
+        $(outputId).innerText = `【${successTitle}】\n\n${result.text}${quotaNote}`;
+        return;
+      } catch (error) {
+        $(outputId).innerText = `【AI 服務暫時無法使用】\n\n${error?.message || '請稍後再試。'}\n\n已改用備用方式：系統會複製提示詞並開啟免費 Google AI Mode。`;
+      }
+    } else if (ai?.isConfigured?.() && !ai?.isSignedIn?.()) {
+      $(outputId).innerText = `【請先 Google 登入】\n\n若要在本頁直接產生 AI 回覆，請先按右上角 Google 登入。\n\n備用方式：系統會複製提示詞並開啟免費 Google AI Mode。`;
+    } else if (ai?.isConfigured?.() && ai?.isSignedIn?.() && !ai?.isAllowed?.()) {
+      $(outputId).innerText = `【帳號無法使用頁內 AI】\n\n此工具限 @apps.chses.tyc.edu.tw 帳號登入使用。\n\n備用方式：系統會複製提示詞並開啟免費 Google AI Mode。`;
+    } else {
+      $(outputId).innerText = fallbackText;
+    }
+    writeClipboard(prompt, fallbackToast);
     window.open('https://www.google.com/ai', '_blank', 'noopener');
+  }
+
+  async function openGoogleAiMode() {
+    const prompt = googleAiModePrompt();
+    await runAiOrFallback({
+      prompt,
+      outputId: 'caseSearchOutput',
+      successTitle: 'AI 法律案例整理',
+      loadingText: 'AI 正在整理相似案例與諮詢問題，請稍候。',
+      fallbackToast: '已複製 AI Mode 提問',
+      fallbackText: `【Google AI Mode 提問已複製】\n\n${prompt}\n\n操作方式：\n1. 已將上方提問複製到剪貼簿。\n2. Google AI Mode 開啟後，貼上提問並送出。\n3. 若看不到 AI Mode，請改用一般 Google 搜尋或 Gemini，並貼上同一段提問。`
+    });
   }
 
   function googleAiParentNoticePrompt() {
     const d = neutralizedRecordData();
-    return `請協助我把以下校園事件紀錄，改寫成可以傳給家長的溫和、客觀、簡短通知短文。\n\n請遵守：\n1. 不要新增沒有出現在紀錄中的事實。\n2. 不要判定學生故意、惡意、違法或有罪。\n3. 不要使用羞辱、責備或情緒化語氣。\n4. 保留必要的時間、地點、事件重點、老師處置與後續協助方向。\n5. 避免使用學生全名、身分證字號、診斷名稱等個資。\n6. 文字要像老師傳給家長的通知，不要像公文。\n7. 請輸出一版 120 到 180 字的通知短文，並另外列出「送出前需確認的事實」3 點。\n\n已先平和化的事件紀錄：\n日期：${d.date}\n時間／節次：${d.period}\n地點：${d.location}\n學生代稱：${d.student}\n事件類型：${d.eventType}\n事件前因：${d.cause}\n學生具體言行：${d.behavior}\n教師當下處置：${d.teacherAction}\n後續處理與紀錄：${d.followup}`;
+    return `請協助我把以下校園事件紀錄，改寫成可以傳給家長的溫和、客觀、簡短通知短文。\n\n請遵守：\n1. 不要新增沒有出現在紀錄中的事實。\n2. 不要判定學生故意、惡意、違法或有罪。\n3. 不要使用羞辱、責備或情緒化語氣。\n4. 保留必要的時間、地點、事件重點、老師處置與後續協助方向。\n5. 避免使用學生全名、身分證字號、診斷名稱等個資。\n6. 文字要像老師傳給家長的通知，不要像公文。\n7. 請輸出一版 120 到 180 字的通知短文，並另外列出「送出前需確認的事實」3 點。\n\n已先平和化的事件紀錄：\n日期：${d.date}\n時間：${d.time}\n地點：${d.location}\n學生代稱：${d.student}\n事件原因與經過：${d.incidentProcess}\n老師處理情形：${d.teacherAction}`;
   }
 
-  function openGoogleAiParentNotice() {
+  async function openGoogleAiParentNotice() {
     const prompt = googleAiParentNoticePrompt();
-    $('recordOutput').innerText = `【Google AI 模式家長通知提示詞已複製】\n\n${prompt}\n\n操作方式：\n1. 已將上方提示詞複製到剪貼簿。\n2. Google AI Mode 開啟後，貼上提示詞並送出。\n3. 回貼給家長前，請再次確認內容沒有新增事實，也沒有學生可識別個資。`;
-    writeClipboard(prompt, '已複製 Google AI 家長通知提示詞');
-    window.open('https://www.google.com/ai', '_blank', 'noopener');
+    await runAiOrFallback({
+      prompt,
+      outputId: 'recordOutput',
+      successTitle: 'AI 家長通知草稿',
+      loadingText: 'AI 正在整理家長通知草稿，請稍候。',
+      fallbackToast: '已複製 Google AI 家長通知提示詞',
+      fallbackText: `【Google AI 模式家長通知提示詞已複製】\n\n${prompt}\n\n操作方式：\n1. 已將上方提示詞複製到剪貼簿。\n2. Google AI Mode 開啟後，貼上提示詞並送出。\n3. 回貼給家長前，請再次確認內容沒有新增事實，也沒有學生可識別個資。`
+    });
   }
 
   function teacherSupportPrompt() {
     const d = neutralizedRecordData();
-    return `我是一位老師，今天在校園事件中感到委屈、挫折和不被理解。請用溫和、支持、非批判的語氣陪我整理情緒。\n\n請你：\n1. 先接住我的感受，不要急著給建議。\n2. 幫我區分「事實」、「我的感受」、「我擔心的事」。\n3. 用不責怪自己的方式，幫我重寫內在對話。\n4. 給我 3 個現在可以做的小步驟，例如呼吸、暫停回訊息、找可信任同事陪同。\n5. 提醒我哪些情況應該找真人支持，例如主任、輔導室、教師會、心理師或安心專線。\n6. 不要做診斷，不要說我有任何疾病。\n\n事件大致如下：\n時間：${d.date}，${d.period}\n地點：${d.location}\n事件類型：${d.eventType}\n事件前因：${d.cause}\n學生具體言行：${d.behavior}\n教師當下處置：${d.teacherAction}\n後續處理：${d.followup}\n\n我現在最難受的是：`;
+    return `我是一位老師，今天在校園事件中感到委屈、挫折和不被理解。請用溫和、支持、非批判的語氣陪我整理情緒。\n\n請你：\n1. 先接住我的感受，不要急著給建議。\n2. 幫我區分「事實」、「我的感受」、「我擔心的事」。\n3. 用不責怪自己的方式，幫我重寫內在對話。\n4. 給我 3 個現在可以做的小步驟，例如呼吸、暫停回訊息、找可信任同事陪同。\n5. 提醒我哪些情況應該找真人支持，例如主任、輔導室、教師會、心理師或安心專線。\n6. 不要做診斷，不要說我有任何疾病。\n\n事件大致如下：\n時間：${d.date}，${d.time}\n地點：${d.location}\n事件關係人：${d.student}\n事件原因與經過：${d.incidentProcess}\n老師處理情形：${d.teacherAction}\n\n我現在最難受的是：`;
   }
 
-  function openTeacherSupport() {
+  async function openTeacherSupport() {
     const prompt = teacherSupportPrompt();
-    $('supportOutput').innerText = `【Google AI 心理支持提示詞已複製】\n\n${prompt}\n\n重要提醒：AI 只能協助整理情緒與提供支持，不能取代心理師、諮商師或醫療協助。若出現自傷念頭、強烈崩潰或長期失眠，請立即找可信任的人陪同，或撥打 1925 安心專線。`;
-    writeClipboard(prompt, '已複製心理支持提示詞');
-    window.open('https://www.google.com/ai', '_blank', 'noopener');
+    await runAiOrFallback({
+      prompt,
+      outputId: 'supportOutput',
+      successTitle: 'AI 心理支持回覆',
+      loadingText: 'AI 正在整理支持回覆，請稍候。',
+      fallbackToast: '已複製心理支持提示詞',
+      fallbackText: `【Google AI 心理支持提示詞已複製】\n\n${prompt}\n\n重要提醒：AI 只能協助整理情緒與提供支持，不能取代心理師、諮商師或醫療協助。若出現自傷念頭、強烈崩潰或長期失眠，請立即找可信任的人陪同，或撥打 1925 安心專線。`
+    });
   }
 
   function resetChecks() {
@@ -639,5 +696,6 @@
   window.addEventListener('beforeunload', clearSavedState);
   loadState();
 </script>
+<script type="module" src="./firebase-ai.js"></script>
 </body>
 </html>

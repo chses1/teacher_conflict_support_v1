@@ -1,0 +1,10 @@
+{
+  "name": "teacher-conflict-support-v1",
+  "private": true,
+  "scripts": {
+    "check": "node --check functions/index.js",
+    "deploy": "firebase deploy --only hosting,functions",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:functions": "firebase deploy --only functions"
+  }
+}

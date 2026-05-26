@@ -1,0 +1,120 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {
+  GoogleAuthProvider,
+  getAuth,
+  onAuthStateChanged,
+  signInWithPopup,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import {
+  getFunctions,
+  httpsCallable
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADPOBd0OgGGwxuiiJtPzFT8pyCVv7n47s",
+  authDomain: "teacher-conflict-support.firebaseapp.com",
+  projectId: "teacher-conflict-support",
+  storageBucket: "teacher-conflict-support.firebasestorage.app",
+  messagingSenderId: "1047946809859",
+  appId: "1:1047946809859:web:801ed2ee35a0bdaea4f436",
+  measurementId: "G-J4BT7NF76C"
+};
+
+const functionRegion = "asia-east1";
+const allowedEmailDomain = "apps.chses.tyc.edu.tw";
+const statusEl = document.getElementById("aiStatus");
+const signInButton = document.getElementById("signInButton");
+const signOutButton = document.getElementById("signOutButton");
+const verifyAiButton = document.getElementById("verifyAiButton");
+
+const isPlaceholder = (value) => !value || String(value).includes("REPLACE_WITH_");
+const configured = Object.values(firebaseConfig).every((value) => !isPlaceholder(value));
+
+let currentUser = null;
+let currentUserAllowed = false;
+let generateTextCallable = null;
+let verifyApiKeyCallable = null;
+
+function setStatus(text) {
+  if (statusEl) statusEl.textContent = text;
+}
+
+function show(el, visible) {
+  el?.classList.toggle("hidden", !visible);
+}
+
+function userName(user) {
+  return user?.displayName || user?.email || "已登入";
+}
+
+async function generateText(prompt) {
+  if (!configured) throw new Error("Firebase 尚未設定，請先填入 firebase-ai.js 的專案設定。");
+  if (!currentUser) throw new Error("請先使用 Google 帳號登入。");
+  if (!currentUserAllowed) throw new Error(`此工具限 ${allowedEmailDomain} 帳號登入使用。`);
+  const result = await generateTextCallable({ prompt });
+  const text = result?.data?.text;
+  if (!text) throw new Error("AI 沒有回傳文字，請稍後再試。");
+  return { text, quota: result?.data?.quota };
+}
+
+async function verifyApiKey() {
+  if (!configured || !currentUser) return;
+  setStatus("AI 模式：正在驗證 API key");
+  verifyAiButton.disabled = true;
+  try {
+    const result = await verifyApiKeyCallable();
+    setStatus(result?.data?.ok ? `AI 模式：API 可用（${userName(currentUser)}）` : "AI 模式：API 驗證失敗");
+  } catch (error) {
+    setStatus(`AI 模式：API 驗證失敗（${error?.message || "請檢查設定"}）`);
+  } finally {
+    verifyAiButton.disabled = false;
+  }
+}
+
+window.teacherAi = {
+  canGenerate: () => configured && !!currentUser && currentUserAllowed,
+  generateText,
+  isConfigured: () => configured,
+  isAllowed: () => currentUserAllowed,
+  isSignedIn: () => !!currentUser
+};
+
+if (!configured) {
+  setStatus("AI 模式：未設定 Firebase");
+  show(signInButton, false);
+  show(signOutButton, false);
+  show(verifyAiButton, false);
+} else {
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const functions = getFunctions(app, functionRegion);
+  const provider = new GoogleAuthProvider();
+  generateTextCallable = httpsCallable(functions, "generateAiText");
+  verifyApiKeyCallable = httpsCallable(functions, "verifyGeminiApiKey");
+
+  show(signInButton, true);
+  show(verifyAiButton, false);
+  show(signOutButton, false);
+  setStatus("AI 模式：請先 Google 登入");
+
+  signInButton?.addEventListener("click", () => signInWithPopup(auth, provider));
+  signOutButton?.addEventListener("click", () => signOut(auth));
+  verifyAiButton?.addEventListener("click", verifyApiKey);
+
+  onAuthStateChanged(auth, (user) => {
+    currentUser = user;
+    const email = String(user?.email || "").toLowerCase();
+    currentUserAllowed = !!user && email.endsWith(`@${allowedEmailDomain}`);
+    show(signInButton, !user);
+    show(signOutButton, !!user);
+    show(verifyAiButton, !!user && currentUserAllowed);
+    if (!user) {
+      setStatus(`AI 模式：請用 ${allowedEmailDomain} 帳號登入`);
+    } else if (!currentUserAllowed) {
+      setStatus(`AI 模式：此帳號不可用，限 ${allowedEmailDomain}`);
+    } else {
+      setStatus(`AI 模式：已登入（${userName(user)}）`);
+    }
+  });
+}
