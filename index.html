@@ -43,7 +43,7 @@
     }
     .wrap { max-width: 1680px; margin: 0 auto; padding: 14px 32px; }
     .topbar {
-      display: grid; grid-template-columns: minmax(420px, 1fr) auto auto;
+      display: grid; grid-template-columns: minmax(420px, 1fr) auto;
       align-items: center; gap: 18px;
     }
     .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
@@ -64,6 +64,7 @@
       background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px;
       max-width: 360px; overflow: hidden; text-overflow: ellipsis;
     }
+    .auth-status.is-visible { display: inline-flex !important; }
     .auth-panel button { padding: 8px 10px; font-size: 13px; box-shadow: none; }
     .hidden { display: none !important; }
     .mobile-menu-toggle { display: none; align-items: center; gap: 8px; white-space: nowrap; }
@@ -248,10 +249,9 @@
         <button class="ghost" data-page-button="record" onclick="switchPage('record')">事件紀錄</button>
         <button class="ghost" data-page-button="law" onclick="switchPage('law')">法律諮詢</button>
         <button class="ghost" data-page-button="support" onclick="switchPage('support')">教師支持</button>
-        <button class="ghost" id="fullscreenButton" type="button" onclick="toggleFullscreen()">全螢幕</button>
       </div>
       <div class="auth-panel" aria-label="AI 登入狀態">
-        <span id="aiStatus" class="auth-status">AI 模式：未設定 Firebase</span>
+        <span id="aiStatus" class="auth-status hidden" role="status" aria-live="polite"></span>
         <button id="signInButton" class="ghost hidden" type="button">Google 登入</button>
         <button id="verifyAiButton" class="ghost hidden" type="button">驗證 API</button>
         <button id="signOutButton" class="ghost hidden" type="button">登出</button>
@@ -488,21 +488,6 @@
     else target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     setMobileMenu(false);
   }
-
-  function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen?.();
-      $('fullscreenButton').textContent = '離開全螢幕';
-    } else {
-      document.exitFullscreen?.();
-      $('fullscreenButton').textContent = '全螢幕';
-    }
-  }
-
-  document.addEventListener('fullscreenchange', () => {
-    const button = $('fullscreenButton');
-    if (button) button.textContent = document.fullscreenElement ? '離開全螢幕' : '全螢幕';
-  });
 
   function val(id) { return ($(id)?.value || '').trim(); }
   function safe(v, fallback='未填寫') { return v && v.length ? v : fallback; }

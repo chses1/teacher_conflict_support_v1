@@ -2,7 +2,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/fireba
 import {
   GoogleAuthProvider,
   getAuth,
+  getRedirectResult,
   onAuthStateChanged,
+  signInWithRedirect,
   signInWithPopup,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
@@ -37,7 +39,10 @@ let generateTextCallable = null;
 let verifyApiKeyCallable = null;
 
 function setStatus(text) {
-  if (statusEl) statusEl.textContent = text;
+  if (!statusEl) return;
+  statusEl.textContent = text || "";
+  statusEl.classList.toggle("is-visible", Boolean(text));
+  statusEl.classList.toggle("hidden", !text);
 }
 
 function show(el, visible) {
@@ -72,6 +77,29 @@ async function verifyApiKey() {
   }
 }
 
+async function signInWithSchoolAccount(auth, provider) {
+  const ok = window.confirm(
+    `請使用 @${allowedEmailDomain} 的 Google 帳號登入。\n\n若使用其他帳號，頁內 AI 功能將無法使用，仍可使用單機版與 Google AI Mode 備用流程。`
+  );
+  if (!ok) return;
+
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (error) {
+    const code = error?.code || "";
+    if (
+      code.includes("popup-blocked") ||
+      code.includes("popup-closed-by-user") ||
+      code.includes("cancelled-popup-request")
+    ) {
+      setStatus("登入視窗未開啟，改用整頁登入。");
+      await signInWithRedirect(auth, provider);
+      return;
+    }
+    setStatus(`登入失敗：${error?.message || "請確認 Firebase Google 登入與授權網域設定。"}`);
+  }
+}
+
 window.teacherAi = {
   canGenerate: () => configured && !!currentUser && currentUserAllowed,
   generateText,
@@ -81,7 +109,7 @@ window.teacherAi = {
 };
 
 if (!configured) {
-  setStatus("AI 模式：未設定 Firebase");
+  setStatus("");
   show(signInButton, false);
   show(signOutButton, false);
   show(verifyAiButton, false);
@@ -96,11 +124,14 @@ if (!configured) {
   show(signInButton, true);
   show(verifyAiButton, false);
   show(signOutButton, false);
-  setStatus("AI 模式：請先 Google 登入");
+  setStatus("");
 
-  signInButton?.addEventListener("click", () => signInWithPopup(auth, provider));
+  signInButton?.addEventListener("click", () => signInWithSchoolAccount(auth, provider));
   signOutButton?.addEventListener("click", () => signOut(auth));
   verifyAiButton?.addEventListener("click", verifyApiKey);
+  getRedirectResult(auth).catch((error) => {
+    setStatus(`登入失敗：${error?.message || "請確認 Firebase Google 登入與授權網域設定。"}`);
+  });
 
   onAuthStateChanged(auth, (user) => {
     currentUser = user;
@@ -110,11 +141,11 @@ if (!configured) {
     show(signOutButton, !!user);
     show(verifyAiButton, !!user && currentUserAllowed);
     if (!user) {
-      setStatus(`AI 模式：請用 ${allowedEmailDomain} 帳號登入`);
+      setStatus("");
     } else if (!currentUserAllowed) {
-      setStatus(`AI 模式：此帳號不可用，限 ${allowedEmailDomain}`);
+      setStatus(`此帳號不可用，限 @${allowedEmailDomain}`);
     } else {
-      setStatus(`AI 模式：已登入（${userName(user)}）`);
+      setStatus(`已登入：${userName(user)}`);
     }
   });
 }
