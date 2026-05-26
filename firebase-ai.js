@@ -5,7 +5,6 @@ import {
   getRedirectResult,
   onAuthStateChanged,
   signInWithRedirect,
-  signInWithPopup,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
@@ -54,12 +53,6 @@ function friendlyAuthError(error) {
   if (code.includes("unauthorized-domain")) {
     return "目前網址尚未加入 Firebase 授權網域。請到 Firebase Authentication > Settings > Authorized domains 加入此測試網址或正式網域。";
   }
-  if (code.includes("popup-blocked")) {
-    return "登入視窗被瀏覽器阻擋，系統將改用整頁登入。";
-  }
-  if (code.includes("popup-closed-by-user")) {
-    return "登入視窗已關閉，尚未完成登入。";
-  }
   return error?.message || "請確認 Firebase Google 登入與授權網域設定。";
 }
 
@@ -98,18 +91,12 @@ async function signInWithSchoolAccount(auth, provider) {
   if (!ok) return;
 
   try {
-    await signInWithPopup(auth, provider);
+    provider.setCustomParameters({
+      hd: allowedEmailDomain,
+      prompt: "select_account"
+    });
+    await signInWithRedirect(auth, provider);
   } catch (error) {
-    const code = error?.code || "";
-    if (
-      code.includes("popup-blocked") ||
-      code.includes("popup-closed-by-user") ||
-      code.includes("cancelled-popup-request")
-    ) {
-      setStatus("登入視窗未開啟，改用整頁登入。");
-      await signInWithRedirect(auth, provider);
-      return;
-    }
     setStatus(`登入失敗：${friendlyAuthError(error)}`);
   }
 }
