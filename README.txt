@@ -33,7 +33,7 @@ Firebase / Gemini AI 模式：
 5. 安裝 Firebase CLI 後，設定 Gemini API key：
    firebase functions:secrets:set GEMINI_API_KEY
 6. 預設模型為 gemini-2.0-flash；需要更換時可調整 functions/index.js 的 GEMINI_MODEL 參數預設值。
-7. 預設每個帳號每天可用 20 次頁內 AI；需要更換時可調整 functions/index.js 的 DAILY_AI_LIMIT 參數預設值。
+7. 預設每個帳號每天可用 5 次頁內 AI；全校每月共用上限 100 次。需要更換時可調整 functions/index.js 的 DAILY_AI_LIMIT 與 MONTHLY_SCHOOL_AI_LIMIT 參數預設值。
 8. 部署：
    firebase deploy --only hosting,functions
 
@@ -47,4 +47,4 @@ GitHub 自動部署：
 安全提醒：
 - Gemini API key 只放在 Firebase Secret，不要寫進 index.html、firebase-ai.js 或 GitHub。
 - firebase-ai.js 內的 Firebase Web API key 不是 Gemini API key；它用來連線 Firebase 專案，仍應搭配 Firebase Auth 與 Functions 權限控管。
-- Firebase 尚未設定、帳號不是 @apps.chses.tyc.edu.tw，或每日額度用完時，系統會維持原本的 Google AI Mode 複製提示詞備用流程。
+- Firebase 尚未設定、帳號不是 @apps.chses.tyc.edu.tw，或個人/全校額度用完時，系統會維持原本的 Google AI Mode 複製提示詞備用流程。

@@ -41,24 +41,28 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--line);
     }
-    .wrap { max-width: 1180px; margin: 0 auto; padding: 18px; }
-    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-    .brand { display: flex; align-items: center; gap: 12px; }
+    .wrap { max-width: 1680px; margin: 0 auto; padding: 14px 32px; }
+    .topbar {
+      display: grid; grid-template-columns: minmax(420px, 1fr) auto auto;
+      align-items: center; gap: 18px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
     .logo {
       width: 50px; height: 50px; border-radius: 50%;
       display: block; object-fit: cover; background: white;
       border: 2px solid #fff; box-shadow: var(--shadow);
     }
-    h1 { font-size: clamp(22px, 4vw, 38px); margin: 0; letter-spacing: .02em; }
-    .subtitle { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
-    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    h1 { font-size: clamp(24px, 2.2vw, 36px); margin: 0; letter-spacing: .02em; white-space: nowrap; }
+    .subtitle { margin: 4px 0 0; color: var(--muted); font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .toolbar { display: flex; gap: 8px; flex-wrap: nowrap; justify-content: flex-end; white-space: nowrap; }
     .auth-panel {
-      display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end;
-      padding: 8px 0 0;
+      display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; justify-content: flex-end;
+      min-width: 0; white-space: nowrap;
     }
     .auth-status {
       color: var(--muted); font-size: 13px; font-weight: 700;
       background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px;
+      max-width: 360px; overflow: hidden; text-overflow: ellipsis;
     }
     .auth-panel button { padding: 8px 10px; font-size: 13px; box-shadow: none; }
     .hidden { display: none !important; }
@@ -81,9 +85,9 @@
     .toolbar button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
     button.danger { background: var(--red); }
     button.green { background: var(--green); }
-    main { padding: 20px 18px 42px; max-width: 1180px; margin: 0 auto; }
+    main { padding: 24px 32px 42px; max-width: 1680px; margin: 0 auto; }
     .hero {
-      display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; align-items: stretch; margin-top: 12px;
+      display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(420px, .75fr); gap: 18px; align-items: stretch; margin-top: 12px;
     }
     .card {
       background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
@@ -197,9 +201,11 @@
       .hero, .levels, .grid.buttons, .phrase-grid, .form-grid, .time-grid, .two-col, .law-grid, .search-links, .steps { grid-template-columns: 1fr; }
       .checklist { columns: 1; }
       .wrap { padding: 14px; }
-      .topbar { align-items: center; flex-wrap: wrap; }
+      .topbar { display: flex; align-items: center; flex-wrap: wrap; }
       .brand { flex: 1 1 calc(100% - 96px); min-width: 0; }
       .logo { width: 44px; height: 44px; }
+      h1 { white-space: normal; font-size: 24px; }
+      .subtitle { white-space: normal; overflow: visible; }
       .subtitle { font-size: 13px; }
       .mobile-menu-toggle { display: inline-flex; }
       .toolbar {
@@ -207,7 +213,8 @@
       }
       .toolbar.open { display: flex; }
       .toolbar button { width: 100%; text-align: left; }
-      .auth-panel { width: 100%; justify-content: flex-start; }
+      .auth-panel { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
+      .auth-status { max-width: 100%; }
       .navbtn { min-height: 82px; padding: 13px 14px; }
       section { scroll-margin-top: 128px; }
     }
@@ -241,6 +248,7 @@
         <button class="ghost" data-page-button="record" onclick="switchPage('record')">事件紀錄</button>
         <button class="ghost" data-page-button="law" onclick="switchPage('law')">法律諮詢</button>
         <button class="ghost" data-page-button="support" onclick="switchPage('support')">教師支持</button>
+        <button class="ghost" id="fullscreenButton" type="button" onclick="toggleFullscreen()">全螢幕</button>
       </div>
       <div class="auth-panel" aria-label="AI 登入狀態">
         <span id="aiStatus" class="auth-status">AI 模式：未設定 Firebase</span>
@@ -480,6 +488,22 @@
     else target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     setMobileMenu(false);
   }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.();
+      $('fullscreenButton').textContent = '離開全螢幕';
+    } else {
+      document.exitFullscreen?.();
+      $('fullscreenButton').textContent = '全螢幕';
+    }
+  }
+
+  document.addEventListener('fullscreenchange', () => {
+    const button = $('fullscreenButton');
+    if (button) button.textContent = document.fullscreenElement ? '離開全螢幕' : '全螢幕';
+  });
+
   function val(id) { return ($(id)?.value || '').trim(); }
   function safe(v, fallback='未填寫') { return v && v.length ? v : fallback; }
 
@@ -599,7 +623,9 @@
       try {
         $(outputId).innerText = loadingText || 'AI 正在整理中，請稍候。';
         const result = await ai.generateText(prompt);
-        const quotaNote = result.quota ? `\n\n今日頁內 AI 剩餘次數：${result.quota.remaining}/${result.quota.limit}` : '';
+        const quotaNote = result.quota
+          ? `\n\n今日個人頁內 AI 剩餘次數：${result.quota.remaining}/${result.quota.limit}\n本月全校頁內 AI 剩餘次數：${result.quota.monthlyRemaining}/${result.quota.monthlyLimit}`
+          : '';
         $(outputId).innerText = `【${successTitle}】\n\n${result.text}${quotaNote}`;
         return;
       } catch (error) {

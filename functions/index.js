@@ -9,7 +9,8 @@ admin.initializeApp();
 const geminiApiKey = defineSecret("GEMINI_API_KEY");
 const geminiModel = defineString("GEMINI_MODEL", { default: "gemini-2.0-flash" });
 const allowedEmailDomain = defineString("ALLOWED_EMAIL_DOMAIN", { default: "apps.chses.tyc.edu.tw" });
-const dailyAiLimit = defineInt("DAILY_AI_LIMIT", { default: 20 });
+const dailyAiLimit = defineInt("DAILY_AI_LIMIT", { default: 5 });
+const monthlySchoolAiLimit = defineInt("MONTHLY_SCHOOL_AI_LIMIT", { default: 100 });
 
 const region = "asia-east1";
 const maxPromptLength = 12000;
@@ -40,6 +41,16 @@ function taipeiDateKey() {
   }).formatToParts(new Date());
   const byType = Object.fromEntries(parts.map((part) => [part.type, part.value]));
   return `${byType.year}-${byType.month}-${byType.day}`;
+}
+
+function taipeiMonthKey() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit"
+  }).formatToParts(new Date());
+  const byType = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${byType.year}-${byType.month}`;
 }
 
 async function consumeDailyQuota(request, email) {
@@ -92,6 +103,54 @@ async function refundDailyQuota(quota) {
   });
 }
 
+async function consumeMonthlySchoolQuota() {
+  const limit = monthlySchoolAiLimit.value();
+  const monthKey = taipeiMonthKey();
+  const docId = `school_${monthKey}`;
+  const ref = admin.firestore().collection("aiMonthlyUsage").doc(docId);
+
+  return admin.firestore().runTransaction(async (transaction) => {
+    const snap = await transaction.get(ref);
+    const current = snap.exists ? Number(snap.data().count || 0) : 0;
+    if (current >= limit) {
+      throw new HttpsError(
+        "resource-exhausted",
+        `本月全校頁內 AI 額度已用完（${current}/${limit}）。請改用免費 Google AI Mode 備用流程。`
+      );
+    }
+    const next = current + 1;
+    transaction.set(
+      ref,
+      {
+        monthKey,
+        count: next,
+        limit,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      },
+      { merge: true }
+    );
+    return { remaining: limit - next, used: next, limit, docId };
+  });
+}
+
+async function refundMonthlySchoolQuota(quota) {
+  if (!quota?.docId) return;
+  const ref = admin.firestore().collection("aiMonthlyUsage").doc(quota.docId);
+  await admin.firestore().runTransaction(async (transaction) => {
+    const snap = await transaction.get(ref);
+    if (!snap.exists) return;
+    const current = Number(snap.data().count || 0);
+    transaction.set(
+      ref,
+      {
+        count: Math.max(0, current - 1),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      },
+      { merge: true }
+    );
+  });
+}
+
 function cleanPrompt(prompt) {
   const value = String(prompt || "").trim();
   if (!value) {
@@ -122,10 +181,12 @@ exports.generateAiText = onCall(
     const email = requireAllowedDomain(request);
     const prompt = cleanPrompt(request.data?.prompt);
     let quota = null;
+    let monthlyQuota = null;
 
     try {
       const aiClient = client();
       quota = await consumeDailyQuota(request, email);
+      monthlyQuota = await consumeMonthlySchoolQuota();
       const response = await aiClient.models.generateContent({
         model: geminiModel.value(),
         contents: prompt,
@@ -143,15 +204,20 @@ exports.generateAiText = onCall(
         quota: {
           remaining: quota.remaining,
           used: quota.used,
-          limit: quota.limit
+          limit: quota.limit,
+          monthlyRemaining: monthlyQuota.remaining,
+          monthlyUsed: monthlyQuota.used,
+          monthlyLimit: monthlyQuota.limit
         }
       };
     } catch (error) {
       if (error instanceof HttpsError) {
-        if (quota && error.code !== "resource-exhausted") await refundDailyQuota(quota);
+        await refundDailyQuota(quota);
+        await refundMonthlySchoolQuota(monthlyQuota);
         throw error;
       }
       await refundDailyQuota(quota);
+      await refundMonthlySchoolQuota(monthlyQuota);
       logger.error("Gemini generation failed", {
         uid: request.auth.uid,
         message: error?.message
