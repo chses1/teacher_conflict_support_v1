@@ -3,18 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "check": "node --check server.js && node --check scripts/write-firebase-web-config.mjs && node --check scripts/fetchCampusSources.js && node --check scripts/validateCampusData.js && node --check functions/index.js",
+    "check": "node --check scripts/write-ai-config.mjs && node --check scripts/fetchCampusSources.js && node --check scripts/validateCampusData.js",
     "fetch:sources": "node scripts/fetchCampusSources.js",
     "validate:data": "node scripts/validateCampusData.js",
-    "write:firebase-config": "node scripts/write-firebase-web-config.mjs",
-    "deploy": "firebase deploy --only hosting,functions",
-    "deploy:hosting": "firebase deploy --only hosting",
-    "deploy:functions": "firebase deploy --only functions"
-  },
-  "dependencies": {
-    "@google/genai": "^1.32.0",
-    "express": "^4.21.2",
-    "firebase-admin": "^13.0.0"
+    "write:ai-config": "node scripts/write-ai-config.mjs"
   }
 }

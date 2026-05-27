@@ -283,9 +283,7 @@
         <button class="ghost" data-page-button="record" onclick="switchPage('record')">事件紀錄</button>
         <button class="ghost" data-page-button="law" onclick="switchPage('law')">法律諮詢</button>
         <button class="ghost" data-page-button="support" onclick="switchPage('support')">教師支持</button>
-        <button id="signInButton" class="ghost hidden" type="button">Google 登入</button>
         <button id="verifyAiButton" class="ghost hidden" type="button">驗證 API</button>
-        <button id="signOutButton" class="ghost hidden" type="button">登出</button>
       </div>
       <div class="auth-panel" aria-label="AI 登入狀態">
         <span id="aiStatus" class="auth-status hidden" role="status" aria-live="polite"></span>
@@ -449,7 +447,7 @@
       <div class="form-actions">
         <button onclick="openGoogleAiMode()">AI 案例整理</button>
       </div>
-      <div id="caseSearchOutput" class="output light">請先填寫事件紀錄。登入後可在本頁整理案例；未登入或服務暫時不可用時，會複製完整提問並開啟 Google AI Mode。</div>
+      <div id="caseSearchOutput" class="output light">請先填寫事件紀錄。若頁內 AI 可用，會直接整理案例；若尚未設定或服務暫時不可用，會複製完整提問並開啟 Google AI Mode。</div>
       <h3>教育部相關法條</h3>
       <p class="section-note">以下連結至教育部主管法規共用系統，送出紀錄、通報或諮詢前，請以官方頁面最新內容為準。</p>
       <div class="search-links">
@@ -474,7 +472,7 @@
         <button onclick="openTeacherSupport()">AI 心理支持</button>
         <button class="secondary" onclick="copyText('supportOutput')">複製提示詞</button>
       </div>
-      <div id="supportOutput" class="output light">請先填寫事件紀錄。登入後可在本頁產生支持回覆；未登入或服務暫時不可用時，會複製提示詞並開啟 Google AI Mode。若有強烈崩潰、自傷念頭或長期失眠，請立即找真人協助，台灣可撥打 1925 安心專線。</div>
+      <div id="supportOutput" class="output light">請先填寫事件紀錄。若頁內 AI 可用，會直接產生支持回覆；若尚未設定或服務暫時不可用，會複製提示詞並開啟 Google AI Mode。若有強烈崩潰、自傷念頭或長期失眠，請立即找真人協助，台灣可撥打 1925 安心專線。</div>
     </section>
 
   </main>
@@ -727,10 +725,8 @@
       } catch (error) {
         $(outputId).innerText = `【AI 服務暫時無法使用】\n\n${error?.message || '請稍後再試。'}\n\n已改用備用方式：系統會複製提示詞並開啟免費 Google AI Mode。`;
       }
-    } else if (ai?.isConfigured?.() && !ai?.isSignedIn?.()) {
-      $(outputId).innerText = `【請先 Google 登入】\n\n若要在本頁直接產生 AI 回覆，請先按右上角 Google 登入。\n\n備用方式：系統會複製提示詞並開啟免費 Google AI Mode。`;
-    } else if (ai?.isConfigured?.() && ai?.isSignedIn?.() && !ai?.isAllowed?.()) {
-      $(outputId).innerText = `【帳號無法使用頁內 AI】\n\n此工具限 @apps.chses.tyc.edu.tw 帳號登入使用。\n\n備用方式：系統會複製提示詞並開啟免費 Google AI Mode。`;
+    } else if (!ai?.isConfigured?.()) {
+      $(outputId).innerText = `【頁內 AI 尚未設定】\n\n目前會改用備用方式：系統會複製提示詞並開啟免費 Google AI Mode。`;
     } else {
       $(outputId).innerText = fallbackText;
     }
@@ -819,6 +815,6 @@
   loadState();
   loadCampusEvents();
 </script>
-<script type="module" src="./firebase-ai.js"></script>
+<script type="module" src="./ai.js"></script>
 </body>
 </html>

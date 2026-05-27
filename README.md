@@ -8,22 +8,14 @@
 4. 產生的文字請再次確認，不要加入未發生的事實或不存在的證據。
 5. 本工具僅供事件紀錄、溝通與諮詢準備，不取代正式校內程序、主管機關判斷或法律專業意見。
 
-## Render / Gemini AI 模式
+## 單機版 / Gemini AI 模式
 
-1. 到 Firebase 建立專案，只啟用 Authentication 的 Google 登入。
-2. 到 Firebase 專案設定新增 Web App，將 Web App 設定放進 `firebase-ai-config.js`，或用部署流程產生。
-3. 到 Firebase 專案設定 > Service accounts 產生 service account JSON。
-4. 在 Render 建立 Web Service，連到 GitHub repository。
-   - Build Command：`npm install && npm run write:firebase-config`
-   - Start Command：`npm start`
-5. Render Environment Variables 需要新增：
-   - `GEMINI_API_KEY`
-   - `FIREBASE_SERVICE_ACCOUNT_JSON`
-   - `FIREBASE_PROJECT_ID`
-   - `FIREBASE_WEB_API_KEY`
-   - `FIREBASE_MESSAGING_SENDER_ID`
-   - `FIREBASE_APP_ID`
-   - 可選：`FIREBASE_AUTH_DOMAIN`、`FIREBASE_STORAGE_BUCKET`、`FIREBASE_MEASUREMENT_ID`、`ALLOWED_EMAIL_DOMAIN`、`GEMINI_MODEL`、`CORS_ALLOWED_ORIGIN`
+1. GitHub repository secrets 新增：
+   - `GEMINI_API_KEY`：Google AI Studio 的免費 Gemini API key
+2. GitHub repository variables 可選新增：
+   - `GEMINI_MODEL`：預設 `gemini-2.0-flash`
+3. push 到 `main` 後，GitHub Actions 會先產生 `ai-config.js`，再部署 GitHub Pages。
+4. 若沒有設定 API key、額度用完或頁內 AI 暫時失敗，系統會自動改用 Google AI Mode 備用流程。
 
 ## 半自動校園事件資料更新流程
 
@@ -46,6 +38,6 @@
 
 ## 安全提醒
 
-- Gemini API key 只放在 Render Environment Variables，不要寫進前端檔案或 GitHub。
-- `firebase-ai-config.js` 內的 Firebase Web API key 不是 Gemini API key；它只用來啟動 Firebase Google 登入。
-- `data/drafts/campus-events-draft.json` 是人工審核用檔案，不應由正式前端讀取。
+- 單機版會把 Gemini API key 打包到前端設定檔；公開網站上的使用者有機會在瀏覽器中看到 key。
+- 建議只使用免費額度 key，並在 Google Cloud / AI Studio 監控用量；若 key 外洩，可停用舊 key 並更換 GitHub secret。
+- `data/drafts/campus-events-draft.json` 是人工審核用檔案，不會被 GitHub Pages 部署流程放到正式網站。
