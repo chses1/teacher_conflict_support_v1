@@ -135,6 +135,7 @@ const publicFiles = new Map([
   ["/index.html", "index.html"],
   ["/firebase-ai.js", "firebase-ai.js"],
   ["/firebase-ai-config.js", "firebase-ai-config.js"],
+  ["/data/campus-events.json", "data/campus-events.json"],
   ["/%E4%B8%AD%E5%B1%B1%E5%9C%8B%E5%B0%8F.jpg", "中山國小.jpg"],
   ["/中山國小.jpg", "中山國小.jpg"]
 ]);

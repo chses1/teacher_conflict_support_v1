@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check server.js && node --check scripts/write-firebase-web-config.mjs && node --check functions/index.js",
+    "check": "node --check server.js && node --check scripts/write-firebase-web-config.mjs && node --check scripts/fetchCampusSources.js && node --check scripts/validateCampusData.js && node --check functions/index.js",
+    "fetch:sources": "node scripts/fetchCampusSources.js",
+    "validate:data": "node scripts/validateCampusData.js",
     "write:firebase-config": "node scripts/write-firebase-web-config.mjs",
     "deploy": "firebase deploy --only hosting,functions",
     "deploy:hosting": "firebase deploy --only hosting",

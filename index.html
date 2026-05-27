@@ -103,6 +103,26 @@
     }
     .navbtn .icon { grid-row: span 2; font-size: 30px; line-height: 1; }
     .navbtn .small { color: var(--muted); font-weight: 600; font-size: 15px; line-height: 1.35; }
+    .campus-data-panel {
+      margin-top: 14px; border: 4px dashed #f436ec; border-radius: 18px; padding: 16px 18px;
+      background: #fff; min-height: 170px;
+    }
+    .campus-data-panel h3 {
+      margin: 0 0 10px; color: #1d4ed8; font-size: 22px; text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+    .campus-data-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+    .campus-data-item {
+      border: 1px solid var(--line); border-radius: 14px; padding: 12px; background: #f8fafc;
+    }
+    .campus-data-value { font-size: 26px; font-weight: 900; color: var(--primary); line-height: 1.1; }
+    .campus-data-label { font-weight: 900; margin-top: 4px; }
+    .campus-data-note { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .campus-data-source { color: var(--muted); font-size: 12px; margin-top: 8px; }
+    .campus-data-empty {
+      color: var(--muted); background: #f8fafc; border: 1px solid var(--line); border-radius: 14px;
+      padding: 14px; min-height: 90px;
+    }
     section { margin-top: 20px; scroll-margin-top: 96px; }
     section h2 { margin: 0 0 12px; font-size: 26px; }
     .section-note { color: var(--muted); margin-top: -8px; }
@@ -196,7 +216,7 @@
     }
     .toast.show { opacity: 1; transform: translateY(0); }
     @media (max-width: 900px) {
-      .hero, .levels, .grid.buttons, .phrase-grid, .form-grid, .time-grid, .two-col, .law-grid, .search-links, .steps { grid-template-columns: 1fr; }
+      .hero, .levels, .grid.buttons, .campus-data-grid, .phrase-grid, .form-grid, .time-grid, .two-col, .law-grid, .search-links, .steps { grid-template-columns: 1fr; }
       .checklist { columns: 1; }
       .wrap { padding: 14px; }
       .topbar { display: flex; align-items: center; flex-wrap: wrap; }
@@ -276,6 +296,10 @@
           <button class="navbtn" onclick="switchPage('record')"><span class="icon">📝</span>事件紀錄<span class="small">紀錄、家長通知、行政通報</span></button>
           <button class="navbtn" onclick="switchPage('law')"><span class="icon">⚖️</span>法律諮詢<span class="small">登入後頁內整理案例</span></button>
           <button class="navbtn" onclick="switchPage('support')"><span class="icon">💬</span>教師支持<span class="small">登入後頁內整理情緒</span></button>
+        </div>
+        <div class="campus-data-panel" aria-labelledby="campusDataTitle">
+          <h3 id="campusDataTitle">教育現場的真實數據</h3>
+          <div id="campusDataContent" class="campus-data-empty">正在讀取已審核資料。</div>
         </div>
       </div>
       <div class="card warning">
@@ -526,6 +550,55 @@
     URL.revokeObjectURL(a.href);
   }
 
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[char]));
+  }
+
+  function campusDataItemHtml(item) {
+    const value = escapeHtml(item.value || item.number || item.title || '已發布');
+    const label = escapeHtml(item.label || item.name || item.summary || '已審核資料');
+    const note = escapeHtml(item.note || item.description || '');
+    const source = escapeHtml(item.sourceName || item.source || '');
+    const url = escapeHtml(item.sourceUrl || item.url || '');
+    const sourceText = url
+      ? `<a href="${url}" target="_blank" rel="noopener">${source || '資料來源'}</a>`
+      : source;
+    return `
+      <div class="campus-data-item">
+        <div class="campus-data-value">${value}</div>
+        <div class="campus-data-label">${label}</div>
+        ${note ? `<div class="campus-data-note">${note}</div>` : ''}
+        ${sourceText ? `<div class="campus-data-source">${sourceText}</div>` : ''}
+      </div>
+    `;
+  }
+
+  async function loadCampusEvents() {
+    const container = $('campusDataContent');
+    if (!container) return;
+    try {
+      const response = await fetch('./data/campus-events.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('正式資料尚未可讀取');
+      const data = await response.json();
+      if (!Array.isArray(data) || data.length === 0) {
+        container.className = 'campus-data-empty';
+        container.textContent = '已建立半自動更新流程；draft 產生後需人工審核，正式資料發布到 data/campus-events.json 後才會顯示在這裡。';
+        return;
+      }
+      container.className = 'campus-data-grid';
+      container.innerHTML = data.map(campusDataItemHtml).join('');
+    } catch (error) {
+      container.className = 'campus-data-empty';
+      container.textContent = '目前尚未發布已審核資料。請先檢查 draft，手動更新正式資料後再部署。';
+    }
+  }
+
   function baseData() {
     return {
       date: safe(val('date'), '○年○月○日'),
@@ -703,6 +776,7 @@
   window.addEventListener('pagehide', clearSavedState);
   window.addEventListener('beforeunload', clearSavedState);
   loadState();
+  loadCampusEvents();
 </script>
 <script type="module" src="./firebase-ai.js"></script>
 </body>

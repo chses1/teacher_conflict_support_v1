@@ -54,6 +54,18 @@ Render / Gemini AI 模式：
 4. 開啟：
    http://localhost:3000
 
+半自動校園事件資料更新流程：
+1. 抓取來源並產生審核稿：
+   npm run fetch:sources
+2. 人工檢查 data/drafts/campus-events-draft.json。
+   - draft 只供審核，不會被正式前端讀取。
+   - draft 裡的數字都會標記 status: "needs_review"。
+3. 手動整理並更新正式資料：
+   data/campus-events.json
+4. 驗證正式資料與 draft 狀態：
+   npm run validate:data
+5. 確認後再部署網站。
+
 安全提醒：
 - Gemini API key 只放在 Render Environment Variables，不要寫進 index.html、firebase-ai.js、firebase-ai-config.js 或 GitHub。
 - firebase-ai-config.js 內的 Firebase Web API key 不是 Gemini API key；它只用來啟動 Firebase Google 登入。
