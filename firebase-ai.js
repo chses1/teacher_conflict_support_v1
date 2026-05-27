@@ -3,40 +3,51 @@ import {
   GoogleAuthProvider,
   getAuth,
   getRedirectResult,
+  getIdToken,
   onAuthStateChanged,
   signInWithPopup,
   signInWithRedirect,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
-  getFunctions,
-  httpsCallable
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-functions.js";
+  allowedEmailDomain,
+  apiBaseUrl,
+  firebaseConfig
+} from "./firebase-ai-config.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB3rXWIPLlsnR6KOk_mEMygwKLoiXv80CI",
-  authDomain: "gen-lang-client-0649238276.firebaseapp.com",
-  projectId: "gen-lang-client-0649238276",
-  storageBucket: "gen-lang-client-0649238276.firebasestorage.app",
-  messagingSenderId: "850568700942",
-  appId: "1:850568700942:web:b7c0a06a204f242943085f",
-  measurementId: "G-NHDCFLJV7S"
-};
-
-const functionRegion = "asia-east1";
-const allowedEmailDomain = "apps.chses.tyc.edu.tw";
 const statusEl = document.getElementById("aiStatus");
 const signInButton = document.getElementById("signInButton");
 const signOutButton = document.getElementById("signOutButton");
 const verifyAiButton = document.getElementById("verifyAiButton");
 
 const isPlaceholder = (value) => !value || String(value).includes("REPLACE_WITH_");
-const configured = Object.values(firebaseConfig).every((value) => !isPlaceholder(value));
+const requiredFirebaseConfigKeys = ["apiKey", "authDomain", "projectId", "appId"];
+const configured = requiredFirebaseConfigKeys.every((key) => !isPlaceholder(firebaseConfig[key]));
 
 let currentUser = null;
 let currentUserAllowed = false;
-let generateTextCallable = null;
-let verifyApiKeyCallable = null;
+
+function apiUrl(path) {
+  const base = String(apiBaseUrl || "").replace(/\/$/, "");
+  return `${base}${path}`;
+}
+
+async function callAiApi(path, body = {}) {
+  const token = await getIdToken(currentUser);
+  const response = await fetch(apiUrl(path), {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body)
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data?.error || "AI 服務暫時無法使用。");
+  }
+  return data;
+}
 
 function setStatus(text) {
   if (!statusEl) return;
@@ -71,13 +82,13 @@ function userName(user) {
 }
 
 async function generateText(prompt) {
-  if (!configured) throw new Error("Firebase 尚未設定，請先填入 firebase-ai.js 的專案設定。");
+  if (!configured) throw new Error("Firebase 尚未設定，請先設定 firebase-ai-config.js 或 GitHub 環境變數。");
   if (!currentUser) throw new Error("請先使用 Google 帳號登入。");
   if (!currentUserAllowed) throw new Error(`此工具限 ${allowedEmailDomain} 帳號登入使用。`);
-  const result = await generateTextCallable({ prompt });
-  const text = result?.data?.text;
+  const result = await callAiApi("/api/generate", { prompt });
+  const text = result?.text;
   if (!text) throw new Error("AI 沒有回傳文字，請稍後再試。");
-  return { text, quota: result?.data?.quota };
+  return { text, quota: result?.quota };
 }
 
 async function verifyApiKey() {
@@ -85,8 +96,8 @@ async function verifyApiKey() {
   setStatus("AI 模式：正在驗證 API key");
   verifyAiButton.disabled = true;
   try {
-    const result = await verifyApiKeyCallable();
-    setStatus(result?.data?.ok ? `AI 模式：API 可用（${userName(currentUser)}）` : "AI 模式：API 驗證失敗");
+    const result = await callAiApi("/api/verify");
+    setStatus(result?.ok ? `AI 模式：API 可用（${userName(currentUser)}）` : "AI 模式：API 驗證失敗");
   } catch (error) {
     setStatus(`AI 模式：API 驗證失敗（${error?.message || "請檢查設定"}）`);
   } finally {
@@ -137,10 +148,7 @@ if (!configured) {
 } else {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const functions = getFunctions(app, functionRegion);
   const provider = new GoogleAuthProvider();
-  generateTextCallable = httpsCallable(functions, "generateAiText");
-  verifyApiKeyCallable = httpsCallable(functions, "verifyGeminiApiKey");
 
   show(signInButton, true);
   show(verifyAiButton, false);
