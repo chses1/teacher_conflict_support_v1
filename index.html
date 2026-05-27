@@ -129,11 +129,6 @@
     .campus-data-source { color: var(--muted); font-size: 15px; margin-top: 10px; }
     .campus-data-source a { color: #1d4ed8; font-weight: 800; text-decoration: none; }
     .campus-data-source a:hover { text-decoration: underline; }
-    .campus-data-notes {
-      margin: 12px 0 0; padding: 12px 14px 12px 32px; background: #f8fafc;
-      border: 1px solid var(--line); border-radius: 14px; color: #334155; font-size: 16px;
-    }
-    .campus-data-notes li { margin: 4px 0; }
     .campus-data-empty {
       color: var(--muted); background: #f8fafc; border: 1px solid var(--line); border-radius: 14px;
       padding: 14px; min-height: 90px;
@@ -142,6 +137,7 @@
     section h2 { margin: 0 0 12px; font-size: 30px; }
     .section-note { color: var(--muted); margin-top: -8px; font-size: 18px; }
     .levels { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+    .warning .levels { grid-template-columns: 1fr; margin-top: 14px; }
     .level {
       border-radius: 18px; padding: 18px; border: 1px solid var(--line); background: white;
     }
@@ -199,10 +195,6 @@
       font-size: 16px;
     }
     .step strong { display: block; margin-bottom: 4px; color: var(--primary); }
-    .checklist { columns: 2; column-gap: 28px; }
-    .checkitem { break-inside: avoid; margin: 8px 0; display: flex; gap: 8px; align-items: flex-start; }
-    .checkitem input { width: auto; margin-top: 8px; }
-    .risk-list li { margin-bottom: 10px; }
     .law-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
     .law-card {
       background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 16px;
@@ -234,7 +226,6 @@
       .hero, .levels, .grid.buttons, .campus-data-grid, .phrase-grid, .form-grid, .time-grid, .two-col, .law-grid, .search-links, .steps { grid-template-columns: 1fr; }
       .campus-data-heading { display: block; }
       .campus-data-meta { justify-content: flex-start; margin-top: 8px; }
-      .checklist { columns: 1; }
       .wrap { padding: 14px; }
       .topbar { display: flex; align-items: center; flex-wrap: wrap; }
       .brand { flex: 1 1 calc(100% - 96px); min-width: 0; }
@@ -320,74 +311,29 @@
       <div class="card warning">
         <h2>我會先站在老師這一邊</h2>
         <p>不是要您立刻堅強，也不是要您自己扛下全部。先把人保護好，把事實留下來，再讓能協助的人一起進場。</p>
-        <ul>
-          <li>先確認安全，不必在高張力現場獨自處理。</li>
-          <li>用座號或代稱紀錄，保護學生，也保護自己。</li>
-          <li>留下時間線、在場人、照片或護理紀錄，讓事實有地方安放。</li>
-          <li>本工具協助整理，不取代正式程序或專業意見。</li>
-        </ul>
+        <h3>事件嚴重性快速釐清</h3>
+        <div class="levels">
+          <div class="level green">
+            <h3>綠色：一般不服管教</h3>
+            <p>插嘴、頂嘴、拒絕作業、拒絕收平板、不回座位。</p>
+            <strong>建議：</strong>簡短紀錄、課後個別談話、必要時聯絡家長。
+            <div class="chips"><span class="chip">簡短紀錄</span><span class="chip">課後談話</span><span class="chip">規範重申</span></div>
+          </div>
+          <div class="level yellow">
+            <h3>黃色：衝突升高</h3>
+            <p>辱罵、拍桌、摔東西、威脅、拒絕離開現場。</p>
+            <strong>建議：</strong>避免單獨處理，通知行政或輔導，完成事件紀錄。
+            <div class="chips"><span class="chip">找第三人在場</span><span class="chip">行政支援</span><span class="chip">正式紀錄</span></div>
+          </div>
+          <div class="level red">
+            <h3>紅色：安全事件</h3>
+            <p>推打老師、丟物造成危險、持物威脅、有人受傷、破壞物品。</p>
+            <strong>建議：</strong>人身安全優先，立即求援，健康中心紀錄，請行政確認校安與後續程序。
+            <div class="chips"><span class="chip">立即求援</span><span class="chip">護理紀錄</span><span class="chip">證據保全</span></div>
+          </div>
+        </div>
       </div>
     </div>
-
-    <details id="level" class="card compact-detail">
-      <summary>🧭 事件分級</summary>
-      <p class="section-note">需要快速判斷嚴重程度時，可用這裡確認下一步支援強度。</p>
-      <div class="levels">
-        <div class="level green">
-          <h3>綠色：一般不服管教</h3>
-          <p>插嘴、頂嘴、拒絕作業、拒絕收平板、不回座位。</p>
-          <strong>建議：</strong>簡短紀錄、課後個別談話、必要時聯絡家長。
-          <div class="chips"><span class="chip">簡短紀錄</span><span class="chip">課後談話</span><span class="chip">規範重申</span></div>
-        </div>
-        <div class="level yellow">
-          <h3>黃色：衝突升高</h3>
-          <p>辱罵、拍桌、摔東西、威脅、拒絕離開現場。</p>
-          <strong>建議：</strong>避免單獨處理，通知行政或輔導，完成事件紀錄。
-          <div class="chips"><span class="chip">找第三人在場</span><span class="chip">行政支援</span><span class="chip">正式紀錄</span></div>
-        </div>
-        <div class="level red">
-          <h3>紅色：安全事件</h3>
-          <p>推打老師、丟物造成危險、持物威脅、有人受傷、破壞物品。</p>
-          <strong>建議：</strong>人身安全優先，立即求援，健康中心紀錄，請行政確認校安與後續程序。
-          <div class="chips"><span class="chip">立即求援</span><span class="chip">護理紀錄</span><span class="chip">證據保全</span></div>
-        </div>
-      </div>
-    </details>
-
-    <details id="risk" class="card compact-detail">
-      <summary>⚠️ 教師自保檢核與避雷</summary>
-      <div class="two-col">
-        <div>
-          <h3>事件後自保檢核</h3>
-          <div class="checklist" id="checklist">
-            <label class="checkitem"><input type="checkbox">記下日期、時間、地點。</label>
-            <label class="checkitem"><input type="checkbox">記下學生具體說了什麼。</label>
-            <label class="checkitem"><input type="checkbox">記下學生具體做了什麼。</label>
-            <label class="checkitem"><input type="checkbox">記下自己說了什麼、做了什麼。</label>
-            <label class="checkitem"><input type="checkbox">確認是否有其他老師、行政或學生在場。</label>
-            <label class="checkitem"><input type="checkbox">確認是否有監視器、課堂錄影或相關紀錄。</label>
-            <label class="checkitem"><input type="checkbox">若有受傷，到健康中心或就醫留下紀錄。</label>
-            <label class="checkitem"><input type="checkbox">若有物品損壞，拍照並保存收據。</label>
-            <label class="checkitem"><input type="checkbox">通知學務處或輔導室，留下通知紀錄。</label>
-            <label class="checkitem"><input type="checkbox">需要時請行政確認校安或正式處理程序。</label>
-            <label class="checkitem"><input type="checkbox">若被投訴，先整理事實再提出說明。</label>
-            <label class="checkitem"><input type="checkbox">必要時諮詢教師會、法律窗口或主管機關。</label>
-          </div>
-          <div class="form-actions"><button class="secondary" onclick="resetChecks()">清空勾選</button></div>
-        </div>
-        <div>
-          <h3>避免踩雷</h3>
-          <ol class="risk-list">
-            <li>不要只寫「學生態度惡劣」，改寫成具體行為。</li>
-            <li>不要私下單獨處理已有威脅或肢體接觸的學生。</li>
-            <li>不要在情緒中傳訊息給家長，先改成客觀版本。</li>
-            <li>不要刪除原始訊息、照片、護理紀錄、行政協助紀錄。</li>
-            <li>不要讓事件只變成「各說各話」，要補上時間線與在場人員。</li>
-            <li>不要用 AI 或模板捏造不存在的事實、證據或對話。</li>
-          </ol>
-        </div>
-      </div>
-    </details>
     </div>
 
     <section id="phrases" class="card page">
@@ -599,11 +545,6 @@
     `;
   }
 
-  function campusNotesHtml(notes) {
-    if (!Array.isArray(notes) || notes.length === 0) return '';
-    return `<ul class="campus-data-notes">${notes.map(note => `<li>${escapeHtml(note)}</li>`).join('')}</ul>`;
-  }
-
   async function loadCampusEvents() {
     const container = $('campusDataContent');
     if (!container) return;
@@ -630,7 +571,6 @@
           </div>
         </div>
         <div class="campus-data-grid">${items.map(campusDataItemHtml).join('')}</div>
-        ${campusNotesHtml(data.notes)}
       `;
     } catch (error) {
       container.className = 'campus-data-empty';
@@ -780,36 +720,24 @@
     });
   }
 
-  function resetChecks() {
-    document.querySelectorAll('#checklist input[type="checkbox"]').forEach(c => c.checked = false);
-    localStorage.removeItem('teacherSupportChecks');
-    showToast('已清空勾選');
-  }
-
   function clearSavedState() {
     localStorage.removeItem('teacherSupportV1');
-    localStorage.removeItem('teacherSupportChecks');
   }
 
   function saveState() {
     const data = {};
     fields.forEach(id => data[id] = val(id));
     localStorage.setItem('teacherSupportV1', JSON.stringify(data));
-    const checks = Array.from(document.querySelectorAll('#checklist input')).map(c => c.checked);
-    localStorage.setItem('teacherSupportChecks', JSON.stringify(checks));
   }
 
   function loadState() {
     try {
       const data = JSON.parse(localStorage.getItem('teacherSupportV1') || '{}');
       fields.forEach(id => { if (data[id] && $(id)) $(id).value = data[id]; });
-      const checks = JSON.parse(localStorage.getItem('teacherSupportChecks') || '[]');
-      document.querySelectorAll('#checklist input').forEach((c,i) => c.checked = !!checks[i]);
     } catch(e) {}
   }
 
   fields.forEach(id => $(id)?.addEventListener('input', saveState));
-  document.querySelectorAll('#checklist input').forEach(c => c.addEventListener('change', saveState));
   window.addEventListener('pagehide', clearSavedState);
   window.addEventListener('beforeunload', clearSavedState);
   loadState();
