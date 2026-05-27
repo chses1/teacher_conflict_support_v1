@@ -39,8 +39,41 @@ async function fileExists(path) {
 const errors = [];
 const official = await readJson(officialPath);
 
-if (!Array.isArray(official)) {
-  errors.push("data/campus-events.json must be a JSON array.");
+if (!official || typeof official !== "object" || Array.isArray(official)) {
+  errors.push("data/campus-events.json must be a JSON object.");
+}
+
+if (typeof official.yearLabel !== "string" || !official.yearLabel.trim()) {
+  errors.push("data/campus-events.json must include yearLabel.");
+}
+
+if (typeof official.lastUpdated !== "string" || !official.lastUpdated.trim()) {
+  errors.push("data/campus-events.json must include lastUpdated.");
+}
+
+if (!Array.isArray(official.items)) {
+  errors.push("data/campus-events.json must include items as an array.");
+} else {
+  official.items.forEach((item, index) => {
+    for (const field of ["title", "unit", "summary", "sourceName", "sourceUrl"]) {
+      if (typeof item?.[field] !== "string" || !item[field].trim()) {
+        errors.push(`items[${index}].${field} must be a non-empty string.`);
+      }
+    }
+    if (!(typeof item?.value === "number" || item?.value === null)) {
+      errors.push(`items[${index}].value must be a number or null.`);
+    }
+  });
+}
+
+if (!Array.isArray(official.notes)) {
+  errors.push("data/campus-events.json must include notes as an array.");
+} else {
+  official.notes.forEach((note, index) => {
+    if (typeof note !== "string" || !note.trim()) {
+      errors.push(`notes[${index}] must be a non-empty string.`);
+    }
+  });
 }
 
 const officialNeedsReview = findNeedsReview(official);

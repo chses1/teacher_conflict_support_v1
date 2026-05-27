@@ -1,1 +1,67 @@
-[]
+{
+  "yearLabel": "113/4/17-114/5/30",
+  "lastUpdated": "2026-05-27",
+  "items": [
+    {
+      "title": "校事會議相關投訴案",
+      "value": 1372,
+      "unit": "件",
+      "summary": "教育部統計顯示，113年4月17日至114年5月30日投訴總案數為1,372件。",
+      "sourceName": "全教總引用教育部統計",
+      "sourceUrl": "https://www.nftu.org.tw/news/news_view.aspx?NewsID=20251017160024C005"
+    },
+    {
+      "title": "受理案件",
+      "value": 1124,
+      "unit": "件",
+      "summary": "受理1,124件，案件受理率約81.9%。",
+      "sourceName": "全教總引用教育部統計",
+      "sourceUrl": "https://www.nftu.org.tw/news/news_view.aspx?NewsID=20251017160024C005"
+    },
+    {
+      "title": "已完成調查案件",
+      "value": 769,
+      "unit": "件",
+      "summary": "已完成調查案件共769件。",
+      "sourceName": "全教總引用教育部統計",
+      "sourceUrl": "https://www.nftu.org.tw/news/news_view.aspx?NewsID=20251017160024C005"
+    },
+    {
+      "title": "成立且懲處案件比例",
+      "value": 40.3,
+      "unit": "%",
+      "summary": "完成調查案件中，成立且終局處理屬於懲處事件為311件，約40.3%。",
+      "sourceName": "全教總引用教育部統計",
+      "sourceUrl": "https://www.nftu.org.tw/news/news_view.aspx?NewsID=20251017160024C005"
+    },
+    {
+      "title": "達停聘／解聘程度案件比例",
+      "value": 3.3,
+      "unit": "%",
+      "summary": "完成調查案件中，僅26案達停聘或解聘程度，約3.3%。",
+      "sourceName": "全教總引用教育部統計",
+      "sourceUrl": "https://www.nftu.org.tw/news/news_view.aspx?NewsID=20251017160024C005"
+    },
+    {
+      "title": "教職員工自殺／自傷事件",
+      "value": 124,
+      "unit": "件",
+      "summary": "教育部113年校安分析報告顯示，教職員工自殺、自傷事件共124件、125人次。",
+      "sourceName": "教育部113年各級學校校園安全及災害事件分析報告",
+      "sourceUrl": "https://www.chucps.kh.edu.tw/upload/113/101_37485/113%E5%B9%B4%E5%90%84%E7%B4%9A%E5%AD%B8%E6%A0%A1%E6%A0%A1%E5%9C%92%E5%AE%89%E5%85%A8%E5%8F%8A%E7%81%BD%E5%AE%B3%E4%BA%8B%E4%BB%B6%E5%88%86%E6%9E%90%E5%A0%B1%E5%91%8A.pdf"
+    },
+    {
+      "title": "管教衝突事件",
+      "value": 4557,
+      "unit": "件",
+      "summary": "教育部113年校安分析報告中，管教衝突事件為4,557件；此分類包含親師生衝突相關事件，不等於新聞篇數。",
+      "sourceName": "教育部113年各級學校校園安全及災害事件分析報告",
+      "sourceUrl": "https://www.chucps.kh.edu.tw/upload/113/101_37485/113%E5%B9%B4%E5%90%84%E7%B4%9A%E5%AD%B8%E6%A0%A1%E6%A0%A1%E5%9C%92%E5%AE%89%E5%85%A8%E5%8F%8A%E7%81%BD%E5%AE%B3%E4%BA%8B%E4%BB%B6%E5%88%86%E6%9E%90%E5%A0%B1%E5%91%8A.pdf"
+    }
+  ],
+  "notes": [
+    "校事會議資料與校安通報資料來源不同，不應直接相加。",
+    "師生衝突新聞篇數目前沒有穩定官方統計，建議以教育部校安通報中的管教衝突事件作為較穩定指標。",
+    "若下一年度資料尚未發布，頁面應顯示「待更新」，不要自動推估。"
+  ]
+}

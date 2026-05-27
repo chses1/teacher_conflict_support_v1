@@ -104,21 +104,35 @@
     .navbtn .icon { grid-row: span 2; font-size: 30px; line-height: 1; }
     .navbtn .small { color: var(--muted); font-weight: 600; font-size: 15px; line-height: 1.35; }
     .campus-data-panel {
-      margin-top: 14px; border: 4px dashed #f436ec; border-radius: 18px; padding: 16px 18px;
-      background: #fff; min-height: 170px;
+      margin-top: 14px; border: 1px solid #bfdbfe; border-radius: 18px; padding: 16px 18px;
+      background: linear-gradient(180deg, #eff6ff 0%, #fff 100%); min-height: 170px;
     }
-    .campus-data-panel h3 {
-      margin: 0 0 10px; color: #1d4ed8; font-size: 22px; text-decoration: underline;
-      text-underline-offset: 4px;
+    .campus-data-heading {
+      display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 12px;
     }
-    .campus-data-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+    .campus-data-panel h3 { margin: 0; color: #172554; font-size: 22px; }
+    .campus-data-meta { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .campus-data-badge {
+      border: 1px solid #bfdbfe; background: #fff; color: #1e3a8a; border-radius: 999px;
+      padding: 4px 9px; font-size: 12px; font-weight: 800;
+    }
+    .campus-data-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
     .campus-data-item {
-      border: 1px solid var(--line); border-radius: 14px; padding: 12px; background: #f8fafc;
+      border: 1px solid #dbe3ef; border-radius: 14px; padding: 12px; background: #fff;
     }
-    .campus-data-value { font-size: 26px; font-weight: 900; color: var(--primary); line-height: 1.1; }
+    .campus-data-value-row { display: flex; align-items: baseline; gap: 4px; margin-top: 8px; }
+    .campus-data-value { font-size: 30px; font-weight: 900; color: var(--primary); line-height: 1.1; }
+    .campus-data-unit { color: #1e3a8a; font-weight: 900; }
     .campus-data-label { font-weight: 900; margin-top: 4px; }
     .campus-data-note { color: var(--muted); font-size: 13px; margin-top: 4px; }
     .campus-data-source { color: var(--muted); font-size: 12px; margin-top: 8px; }
+    .campus-data-source a { color: #1d4ed8; font-weight: 800; text-decoration: none; }
+    .campus-data-source a:hover { text-decoration: underline; }
+    .campus-data-notes {
+      margin: 12px 0 0; padding: 12px 14px 12px 32px; background: #f8fafc;
+      border: 1px solid var(--line); border-radius: 14px; color: #334155; font-size: 13px;
+    }
+    .campus-data-notes li { margin: 4px 0; }
     .campus-data-empty {
       color: var(--muted); background: #f8fafc; border: 1px solid var(--line); border-radius: 14px;
       padding: 14px; min-height: 90px;
@@ -217,6 +231,8 @@
     .toast.show { opacity: 1; transform: translateY(0); }
     @media (max-width: 900px) {
       .hero, .levels, .grid.buttons, .campus-data-grid, .phrase-grid, .form-grid, .time-grid, .two-col, .law-grid, .search-links, .steps { grid-template-columns: 1fr; }
+      .campus-data-heading { display: block; }
+      .campus-data-meta { justify-content: flex-start; margin-top: 8px; }
       .checklist { columns: 1; }
       .wrap { padding: 14px; }
       .topbar { display: flex; align-items: center; flex-wrap: wrap; }
@@ -298,7 +314,7 @@
           <button class="navbtn" onclick="switchPage('support')"><span class="icon">💬</span>教師支持<span class="small">登入後頁內整理情緒</span></button>
         </div>
         <div class="campus-data-panel" aria-labelledby="campusDataTitle">
-          <h3 id="campusDataTitle">教育現場的真實數據</h3>
+          <h3 id="campusDataTitle">台灣校園事件年度摘要</h3>
           <div id="campusDataContent" class="campus-data-empty">正在讀取已審核資料。</div>
         </div>
       </div>
@@ -560,23 +576,38 @@
     }[char]));
   }
 
+  const campusNumberFormatter = new Intl.NumberFormat('zh-Hant-TW');
+
+  function formatCampusValue(value) {
+    if (value === null || value === undefined || value === '') return '待更新';
+    const number = Number(value);
+    if (!Number.isFinite(number)) return escapeHtml(value);
+    return campusNumberFormatter.format(number);
+  }
+
   function campusDataItemHtml(item) {
-    const value = escapeHtml(item.value || item.number || item.title || '已發布');
-    const label = escapeHtml(item.label || item.name || item.summary || '已審核資料');
-    const note = escapeHtml(item.note || item.description || '');
-    const source = escapeHtml(item.sourceName || item.source || '');
-    const url = escapeHtml(item.sourceUrl || item.url || '');
+    const value = escapeHtml(formatCampusValue(item.value));
+    const unit = item.value === null || item.value === undefined ? '' : escapeHtml(item.unit || '');
+    const title = escapeHtml(item.title || '未命名指標');
+    const summary = escapeHtml(item.summary || '');
+    const source = escapeHtml(item.sourceName || '');
+    const url = escapeHtml(item.sourceUrl || '');
     const sourceText = url
       ? `<a href="${url}" target="_blank" rel="noopener">${source || '資料來源'}</a>`
       : source;
     return `
       <div class="campus-data-item">
-        <div class="campus-data-value">${value}</div>
-        <div class="campus-data-label">${label}</div>
-        ${note ? `<div class="campus-data-note">${note}</div>` : ''}
+        <div class="campus-data-label">${title}</div>
+        <div class="campus-data-value-row"><span class="campus-data-value">${value}</span>${unit ? `<span class="campus-data-unit">${unit}</span>` : ''}</div>
+        ${summary ? `<div class="campus-data-note">${summary}</div>` : ''}
         ${sourceText ? `<div class="campus-data-source">${sourceText}</div>` : ''}
       </div>
     `;
+  }
+
+  function campusNotesHtml(notes) {
+    if (!Array.isArray(notes) || notes.length === 0) return '';
+    return `<ul class="campus-data-notes">${notes.map(note => `<li>${escapeHtml(note)}</li>`).join('')}</ul>`;
   }
 
   async function loadCampusEvents() {
@@ -586,13 +617,27 @@
       const response = await fetch('./data/campus-events.json', { cache: 'no-store' });
       if (!response.ok) throw new Error('正式資料尚未可讀取');
       const data = await response.json();
-      if (!Array.isArray(data) || data.length === 0) {
+      const items = Array.isArray(data?.items) ? data.items : [];
+      if (!items.length) {
         container.className = 'campus-data-empty';
         container.textContent = '已建立半自動更新流程；draft 產生後需人工審核，正式資料發布到 data/campus-events.json 後才會顯示在這裡。';
         return;
       }
-      container.className = 'campus-data-grid';
-      container.innerHTML = data.map(campusDataItemHtml).join('');
+      container.className = '';
+      const yearLabel = escapeHtml(data.yearLabel || '年度區間待更新');
+      const lastUpdated = escapeHtml(data.lastUpdated || '待更新');
+      container.innerHTML = `
+        <div class="campus-data-heading">
+          <div>
+            <div class="campus-data-badge">年度區間：${yearLabel}</div>
+          </div>
+          <div class="campus-data-meta">
+            <span class="campus-data-badge">最後更新：${lastUpdated}</span>
+          </div>
+        </div>
+        <div class="campus-data-grid">${items.map(campusDataItemHtml).join('')}</div>
+        ${campusNotesHtml(data.notes)}
+      `;
     } catch (error) {
       container.className = 'campus-data-empty';
       container.textContent = '目前尚未發布已審核資料。請先檢查 draft，手動更新正式資料後再部署。';
