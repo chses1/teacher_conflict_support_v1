@@ -31,7 +31,8 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
       background: radial-gradient(circle at top left, #e0f2fe 0, transparent 30%), var(--bg);
       color: var(--ink);
-      line-height: 1.65;
+      font-size: 18px;
+      line-height: 1.75;
     }
     header {
       position: sticky;
@@ -53,11 +54,11 @@
       border: 2px solid #fff; box-shadow: var(--shadow);
     }
     h1 { font-size: clamp(24px, 2.2vw, 36px); margin: 0; letter-spacing: .02em; white-space: nowrap; }
-    .subtitle { margin: 4px 0 0; color: var(--muted); font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .subtitle { margin: 4px 0 0; color: var(--muted); font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .toolbar { display: flex; gap: 8px; flex-wrap: nowrap; justify-content: flex-end; white-space: nowrap; }
     .auth-panel { display: contents; }
     .auth-status {
-      color: var(--muted); font-size: 13px; font-weight: 700;
+      color: var(--muted); font-size: 15px; font-weight: 700;
       background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px;
       max-width: 360px; overflow: hidden; text-overflow: ellipsis;
     }
@@ -76,6 +77,7 @@
       background: var(--primary); color: white; cursor: pointer; font-weight: 700;
       box-shadow: 0 4px 12px rgba(37,99,235,.18);
       transition: transform .12s ease, opacity .12s ease, background .12s ease;
+      font-size: 18px;
     }
     button:hover { transform: translateY(-1px); opacity: .95; }
     button.secondary { background: #475569; box-shadow: none; }
@@ -89,10 +91,10 @@
     }
     .card {
       background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
-      box-shadow: var(--shadow); padding: 22px;
+      box-shadow: var(--shadow); padding: 26px;
     }
     .warning {
-      background: #fff7ed; border-color: #fed7aa;
+      background: #f8fbff; border-color: #bfdbfe;
     }
     .grid { display: grid; gap: 12px; }
     .grid.buttons { grid-template-columns: repeat(2, minmax(0,1fr)); }
@@ -102,7 +104,7 @@
       align-content: center; align-items: center; padding: 14px 16px;
     }
     .navbtn .icon { grid-row: span 2; font-size: 30px; line-height: 1; }
-    .navbtn .small { color: var(--muted); font-weight: 600; font-size: 15px; line-height: 1.35; }
+    .navbtn .small { color: var(--muted); font-weight: 600; font-size: 17px; line-height: 1.45; }
     .campus-data-panel {
       margin-top: 14px; border: 1px solid #bfdbfe; border-radius: 18px; padding: 16px 18px;
       background: linear-gradient(180deg, #eff6ff 0%, #fff 100%); min-height: 170px;
@@ -110,27 +112,26 @@
     .campus-data-heading {
       display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 12px;
     }
-    .campus-data-panel h3 { margin: 0; color: #172554; font-size: 22px; }
+    .campus-data-panel h3 { margin: 0; color: #172554; font-size: 24px; }
     .campus-data-meta { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
     .campus-data-badge {
       border: 1px solid #bfdbfe; background: #fff; color: #1e3a8a; border-radius: 999px;
-      padding: 4px 9px; font-size: 12px; font-weight: 800;
+      padding: 5px 10px; font-size: 15px; font-weight: 800;
     }
     .campus-data-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
     .campus-data-item {
       border: 1px solid #dbe3ef; border-radius: 14px; padding: 12px; background: #fff;
     }
     .campus-data-value-row { display: flex; align-items: baseline; gap: 4px; margin-top: 8px; }
-    .campus-data-value { font-size: 30px; font-weight: 900; color: var(--primary); line-height: 1.1; }
+    .campus-data-value { font-size: 34px; font-weight: 900; color: var(--primary); line-height: 1.1; }
     .campus-data-unit { color: #1e3a8a; font-weight: 900; }
-    .campus-data-label { font-weight: 900; margin-top: 4px; }
-    .campus-data-note { color: var(--muted); font-size: 13px; margin-top: 4px; }
-    .campus-data-source { color: var(--muted); font-size: 12px; margin-top: 8px; }
+    .campus-data-label { font-weight: 900; margin-top: 4px; font-size: 18px; }
+    .campus-data-source { color: var(--muted); font-size: 15px; margin-top: 10px; }
     .campus-data-source a { color: #1d4ed8; font-weight: 800; text-decoration: none; }
     .campus-data-source a:hover { text-decoration: underline; }
     .campus-data-notes {
       margin: 12px 0 0; padding: 12px 14px 12px 32px; background: #f8fafc;
-      border: 1px solid var(--line); border-radius: 14px; color: #334155; font-size: 13px;
+      border: 1px solid var(--line); border-radius: 14px; color: #334155; font-size: 16px;
     }
     .campus-data-notes li { margin: 4px 0; }
     .campus-data-empty {
@@ -138,8 +139,8 @@
       padding: 14px; min-height: 90px;
     }
     section { margin-top: 20px; scroll-margin-top: 96px; }
-    section h2 { margin: 0 0 12px; font-size: 26px; }
-    .section-note { color: var(--muted); margin-top: -8px; }
+    section h2 { margin: 0 0 12px; font-size: 30px; }
+    .section-note { color: var(--muted); margin-top: -8px; font-size: 18px; }
     .levels { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
     .level {
       border-radius: 18px; padding: 18px; border: 1px solid var(--line); background: white;
@@ -195,7 +196,7 @@
     }
     .step {
       background: #f8fafc; border: 1px solid var(--line); border-radius: 16px; padding: 12px;
-      font-size: 14px;
+      font-size: 16px;
     }
     .step strong { display: block; margin-bottom: 4px; color: var(--primary); }
     .checklist { columns: 2; column-gap: 28px; }
@@ -206,7 +207,7 @@
     .law-card {
       background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 16px;
     }
-    .law-card h3 { margin: 0 0 8px; font-size: 18px; }
+    .law-card h3 { margin: 0 0 8px; font-size: 20px; }
     .law-card a { color: var(--primary); font-weight: 800; text-decoration: none; }
     .law-card a:hover { text-decoration: underline; }
     .law-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
@@ -216,12 +217,12 @@
       display: block; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 14px;
       color: var(--ink); text-decoration: none; font-weight: 800;
     }
-    .search-link span { display: block; color: var(--muted); font-size: 13px; font-weight: 500; margin-top: 4px; }
-    .mini { font-size: 13px; color: var(--muted); }
+    .search-link span { display: block; color: var(--muted); font-size: 15px; font-weight: 500; margin-top: 4px; }
+    .mini { font-size: 15px; color: var(--muted); }
     footer { color: var(--muted); text-align: center; padding: 30px 12px 50px; }
     .pill {
       display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px;
-      font-size: 13px; background: var(--primary-soft); color: #1d4ed8; font-weight: 800;
+      font-size: 15px; background: var(--primary-soft); color: #1d4ed8; font-weight: 800;
     }
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .toast {
@@ -240,7 +241,7 @@
       .logo { width: 44px; height: 44px; }
       h1 { white-space: normal; font-size: 24px; }
       .subtitle { white-space: normal; overflow: visible; }
-      .subtitle { font-size: 13px; }
+      .subtitle { font-size: 16px; }
       .mobile-menu-toggle { display: inline-flex; }
       .toolbar {
         display: none; width: 100%; justify-content: flex-start; flex-direction: column; padding-top: 4px;
@@ -304,14 +305,14 @@
     <div id="home" class="page active">
     <div class="hero">
       <div class="card">
-        <span class="pill">本機版可用・Firebase 登入後可啟用頁內 AI</span>
-        <h2 style="margin-top:12px">衝突發生時，請先保護人，再處理事情。</h2>
-        <p>請選擇一個分頁進入：您可以先穩住現場並紀錄事件後，進行AI法律諮詢及自我內在對話。</p>
+        <span class="pill">給第一線老師的一個安定入口</span>
+        <h2 style="margin-top:12px">先讓自己站穩，我們一步一步來。</h2>
+        <p>事情很亂的時候，先不用急著把所有話說完。這裡會陪您把現場、紀錄、溝通與自我支持慢慢整理清楚。</p>
         <div class="grid buttons">
           <button class="navbtn" onclick="switchPage('phrases')"><span class="icon">🗣️</span>話術卡<span class="small">現場降溫與安全界線</span></button>
           <button class="navbtn" onclick="switchPage('record')"><span class="icon">📝</span>事件紀錄<span class="small">紀錄、家長通知、行政通報</span></button>
-          <button class="navbtn" onclick="switchPage('law')"><span class="icon">⚖️</span>法律諮詢<span class="small">登入後頁內整理案例</span></button>
-          <button class="navbtn" onclick="switchPage('support')"><span class="icon">💬</span>教師支持<span class="small">登入後頁內整理情緒</span></button>
+          <button class="navbtn" onclick="switchPage('law')"><span class="icon">⚖️</span>法律諮詢<span class="small">整理提問與參考來源</span></button>
+          <button class="navbtn" onclick="switchPage('support')"><span class="icon">💬</span>教師支持<span class="small">陪您整理情緒與下一步</span></button>
         </div>
         <div class="campus-data-panel" aria-labelledby="campusDataTitle">
           <h3 id="campusDataTitle">台灣校園事件年度摘要</h3>
@@ -319,13 +320,13 @@
         </div>
       </div>
       <div class="card warning">
-        <h2>使用提醒</h2>
-        <p>本系統不做法律判斷、不判定學生有罪，也不取代校內正式程序或專業法律意見。</p>
+        <h2>我會先站在老師這一邊</h2>
+        <p>不是要您立刻堅強，也不是要您自己扛下全部。先把人保護好，把事實留下來，再讓能協助的人一起進場。</p>
         <ul>
-          <li>事件紀錄建議用座號或代稱，不輸入學生全名、身分證字號、診斷名稱。</li>
-          <li>高衝突、威脅或肢體事件，避免老師單獨處理。</li>
-          <li>有受傷或物品損壞，請留下照片、護理紀錄、收據或行政到場紀錄。</li>
-          <li>表單內容只在使用期間暫存；關閉、離開或重新整理網頁後會自動清除。</li>
+          <li>先確認安全，不必在高張力現場獨自處理。</li>
+          <li>用座號或代稱紀錄，保護學生，也保護自己。</li>
+          <li>留下時間線、在場人、照片或護理紀錄，讓事實有地方安放。</li>
+          <li>本工具協助整理，不取代正式程序或專業意見。</li>
         </ul>
       </div>
     </div>
@@ -422,11 +423,10 @@
       </div>
       <label>事件原因與經過</label><textarea id="incidentProcess" placeholder="例：教師提醒學生收起平板並回到課堂活動，學生大聲回應並拍桌、踢動椅子，影響課堂秩序。"></textarea>
       <label>老師處理情形</label><textarea id="teacherAction" placeholder="例：教師先請其他學生保持距離，安撫現場情緒，並請班長至學務處通知主任協助；後續由行政帶離冷靜並完成紀錄。"></textarea>
-      <h3>AI 家長通知操作步驟</h3>
-      <div class="steps">
-        <div class="step"><strong>1. 先填紀錄</strong>填完上方事件欄位，盡量使用客觀事實與學生代稱。</div>
-        <div class="step"><strong>2. 按家長通知</strong>登入後會直接產生草稿；未設定 AI 時會複製提示詞並開啟 Google AI Mode。</div>
-        <div class="step"><strong>3. 送出前確認</strong>回貼家長前刪除個資，並確認沒有新增事實。</div>
+      <div class="steps" aria-label="家長通知操作步驟">
+        <div class="step"><strong>1. 寫下事實</strong>先用座號或代稱，把時間、地點、具體言行留下來。</div>
+        <div class="step"><strong>2. 產生草稿</strong>按家長通知，系統會協助轉成較平穩的文字。</div>
+        <div class="step"><strong>3. 再確認</strong>送出前刪除個資，也確認沒有新增未發生的事。</div>
       </div>
       <div class="form-actions">
         <button onclick="generateRecord('formal')">事件紀錄</button>
@@ -441,16 +441,15 @@
     <section id="law" class="card page">
       <h2>⚖️ 國內判決搜尋輔助</h2>
       <p class="section-note">依上方校安通報欄位自動整理搜尋語。搜尋時請避免輸入學生姓名等可識別個資，並以事件經過、老師處理情形與程序關鍵字為主。</p>
-      <h3>AI 法律諮詢準備步驟</h3>
-      <div class="steps">
-        <div class="step"><strong>1. 先完成事件紀錄</strong>到「事件紀錄」分頁填寫事實，尤其是時間、地點、具體言行與處置。</div>
-        <div class="step"><strong>2. 產生搜尋提問</strong>登入後會直接整理案例；未設定 AI 時會複製去識別化提問。</div>
-        <div class="step"><strong>3. 帶著結果諮詢</strong>把 AI 整理的相似案例，交給行政、教師會或律師確認，避免自行下結論。</div>
+      <div class="steps" aria-label="法律諮詢操作步驟">
+        <div class="step"><strong>1. 先有紀錄</strong>到事件紀錄填下事實，不急著判斷誰對誰錯。</div>
+        <div class="step"><strong>2. 整理提問</strong>系統協助把情境轉成可諮詢、可查核的問題。</div>
+        <div class="step"><strong>3. 帶去確認</strong>把結果交給行政、教師會或法律窗口再判讀。</div>
       </div>
       <div class="form-actions">
         <button onclick="openGoogleAiMode()">AI 案例整理</button>
       </div>
-      <div id="caseSearchOutput" class="output light">請先填寫事件紀錄。登入並設定 Firebase 後可在本頁整理案例；未設定時會複製完整提問並開啟 Google AI Mode。</div>
+      <div id="caseSearchOutput" class="output light">請先填寫事件紀錄。登入後可在本頁整理案例；未登入或服務暫時不可用時，會複製完整提問並開啟 Google AI Mode。</div>
       <h3>教育部相關法條</h3>
       <p class="section-note">以下連結至教育部主管法規共用系統，送出紀錄、通報或諮詢前，請以官方頁面最新內容為準。</p>
       <div class="search-links">
@@ -466,17 +465,16 @@
     <section id="support" class="card page">
       <h2>💬 教師心理支持</h2>
       <p class="section-note">把事件紀錄整理成心理支持提示詞或頁內 AI 回覆，協助老師先被接住、整理委屈與下一步。AI 不能取代心理師或正式諮商。</p>
-      <h3>AI 支持提示詞操作步驟</h3>
-      <div class="steps">
-        <div class="step"><strong>1. 先填事件輪廓</strong>可先到「事件紀錄」分頁填基本事實，不需要寫得很完美。</div>
-        <div class="step"><strong>2. 按心理支持</strong>登入後會直接產生支持回覆；未設定 AI 時會複製提示詞並開啟 Google AI Mode。</div>
-        <div class="step"><strong>3. 補上感受</strong>貼上後，在最後補一句「我現在最難受的是……」，讓回覆更貼近當下。</div>
+      <div class="steps" aria-label="心理支持操作步驟">
+        <div class="step"><strong>1. 留一點輪廓</strong>不用寫完美，先把發生了什麼簡單放下來。</div>
+        <div class="step"><strong>2. 接住感受</strong>按心理支持，先整理委屈、擔心與下一步。</div>
+        <div class="step"><strong>3. 找真人陪</strong>若已撐不住，請直接找同事、行政或專業協助。</div>
       </div>
       <div class="form-actions">
         <button onclick="openTeacherSupport()">AI 心理支持</button>
         <button class="secondary" onclick="copyText('supportOutput')">複製提示詞</button>
       </div>
-      <div id="supportOutput" class="output light">請先填寫事件紀錄。登入並設定 Firebase 後可在本頁產生支持回覆；未設定時會複製提示詞並開啟 Google AI Mode。若有強烈崩潰、自傷念頭或長期失眠，請立即找真人協助，台灣可撥打 1925 安心專線。</div>
+      <div id="supportOutput" class="output light">請先填寫事件紀錄。登入後可在本頁產生支持回覆；未登入或服務暫時不可用時，會複製提示詞並開啟 Google AI Mode。若有強烈崩潰、自傷念頭或長期失眠，請立即找真人協助，台灣可撥打 1925 安心專線。</div>
     </section>
 
   </main>
@@ -589,7 +587,6 @@
     const value = escapeHtml(formatCampusValue(item.value));
     const unit = item.value === null || item.value === undefined ? '' : escapeHtml(item.unit || '');
     const title = escapeHtml(item.title || '未命名指標');
-    const summary = escapeHtml(item.summary || '');
     const source = escapeHtml(item.sourceName || '');
     const url = escapeHtml(item.sourceUrl || '');
     const sourceText = url
@@ -599,7 +596,6 @@
       <div class="campus-data-item">
         <div class="campus-data-label">${title}</div>
         <div class="campus-data-value-row"><span class="campus-data-value">${value}</span>${unit ? `<span class="campus-data-unit">${unit}</span>` : ''}</div>
-        ${summary ? `<div class="campus-data-note">${summary}</div>` : ''}
         ${sourceText ? `<div class="campus-data-source">${sourceText}</div>` : ''}
       </div>
     `;
