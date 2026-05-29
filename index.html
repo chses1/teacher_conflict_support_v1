@@ -361,6 +361,23 @@
     <section id="phrases" class="card page">
       <h2>🗣️ 現場話術卡</h2>
       <p class="section-note">依近年常見師生衝突情境整理。句子設計原則：不互嗆、不羞辱、不激怒，先穩住安全界線。</p>
+      <div class="two-col">
+        <div>
+          <label>自訂情境</label>
+          <textarea id="phraseContext" placeholder="例：學生在全班面前大聲說老師不公平，拒絕回座位，旁邊同學開始起鬨。"></textarea>
+        </div>
+        <div>
+          <label>年級 / 對象</label>
+          <input id="phraseAudience" placeholder="例：高年級學生、家長到校、兩名學生衝突" />
+          <label>希望語氣</label>
+          <input id="phraseTone" placeholder="例：堅定但不激怒、溫和設界線、先安撫再請求協助" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button onclick="openPhraseAiMode()">AI 產生話術</button>
+        <button class="secondary" onclick="copyText('phraseOutput')">複製提示詞</button>
+      </div>
+      <div id="phraseOutput" class="output light">請輸入自訂情境。系統會複製提示詞並開啟 Google AI Mode，協助產生適合教師現場使用的回應話語。</div>
       <div class="phrase-grid">
         <details open><summary>1. 學生嗆聲、質疑老師權限</summary><div class="quote">我聽到你現在很不滿。你可以不同意老師，但我們不在課堂上互相攻擊。現在先把聲音放低、回到位置，等下課後我會聽你說清楚。</div></details>
         <details><summary>2. 學生辱罵、講髒話或羞辱老師</summary><div class="quote">我會先停止這段對話，因為現在的用語已經不適合繼續談。你可以表達生氣，但不能用辱罵方式。請先停下來，我們等情緒降下來再處理。</div></details>
@@ -452,7 +469,7 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const fields = ['date','hour','minute','location','student','incidentProcess','teacherAction'];
+  const fields = ['date','hour','minute','location','student','incidentProcess','teacherAction','phraseContext','phraseAudience','phraseTone'];
 
   function todayISO() {
     const d = new Date();
@@ -734,6 +751,13 @@
     return `請以台灣資料為主，搜尋與以下校園事件情境相似的新聞、法院判決、教育行政案例或法律實務文章，並整理來源連結。請不要直接下法律結論，請比較事實相似與不同之處。\n\n事件發生時間：${d.date}，${d.time}\n事件發生地點：${d.location}\n事件關係人：${d.student}\n事件原因與經過：${d.incidentProcess}\n老師處理情形：${d.teacherAction}\n\n請用以下格式回答：\n1. 最相似的新聞或案例 3 到 5 則，附來源連結與日期。\n2. 若有相關法院判決，列出法院、案號或可搜尋關鍵字、主要爭點。\n3. 每則案例與本事件相似處／不同處。\n4. 老師諮詢行政、教師會或律師時應追問的問題。\n5. 哪些地方不能直接類推。`;
   }
 
+  function phraseAiPrompt() {
+    const context = safe(val('phraseContext'), '老師遇到一個需要現場降溫與設界線的校園衝突情境');
+    const audience = safe(val('phraseAudience'), '學生或相關人員');
+    const tone = safe(val('phraseTone'), '堅定、溫和、不羞辱、不激怒');
+    return `我是一位台灣國小老師，請協助我依以下情境，設計可以現場使用的教師回應話語。\n\n情境：${context}\n年級或對象：${audience}\n希望語氣：${tone}\n\n請遵守：\n1. 語氣要像真實老師可以說出口的話，不要像公文或標語。\n2. 不要羞辱學生，不要威脅，不要激怒，不要互嗆。\n3. 先穩住安全與秩序，再表達界線，最後給學生可執行的下一步。\n4. 若情境有安全疑慮，請加入請其他學生保持距離、找行政或其他成人協助的話語。\n5. 不要新增未出現在情境中的事實。\n\n請用以下格式回答：\n一、現場第一句話：給我 3 種版本，每句 30 字以內。\n二、接續引導：給我 3 句可以接著說的話。\n三、設界線但不激怒：給我 3 句。\n四、需要求援時：給我 2 句可以對學生或全班說的話。\n五、避免說出口的話：列 5 句高風險說法，並改寫成較安全版本。`;
+  }
+
   async function runAiOrFallback(options) {
     const { prompt, outputId, fallbackText, fallbackToast } = options;
     $(outputId).innerText = fallbackText;
@@ -748,6 +772,16 @@
       outputId: 'caseSearchOutput',
       fallbackToast: '已複製 AI Mode 提問',
       fallbackText: `【Google AI Mode 提問已複製】\n\n${prompt}\n\n操作方式：\n1. 已將上方提問複製到剪貼簿。\n2. Google AI Mode 開啟後，貼上提問並送出。\n3. 若看不到 AI Mode，請改用一般 Google 搜尋，並貼上同一段提問。`
+    });
+  }
+
+  async function openPhraseAiMode() {
+    const prompt = phraseAiPrompt();
+    await runAiOrFallback({
+      prompt,
+      outputId: 'phraseOutput',
+      fallbackToast: '已複製話術提示詞',
+      fallbackText: `【Google AI Mode 話術提示詞已複製】\n\n${prompt}\n\n操作方式：\n1. 已將上方提示詞複製到剪貼簿。\n2. Google AI Mode 開啟後，貼上提示詞並送出。\n3. 使用前請依現場安全、學生狀態與校內程序再調整。`
     });
   }
 
