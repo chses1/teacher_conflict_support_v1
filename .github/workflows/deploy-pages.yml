@@ -35,6 +35,7 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+          GEMINI_ENABLE_GOOGLE_SEARCH: ${{ vars.GEMINI_ENABLE_GOOGLE_SEARCH }}
 
       - name: Validate data
         run: npm run validate:data
