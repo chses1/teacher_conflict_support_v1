@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node --check scripts/write-ai-config.mjs && node --check scripts/fetchCampusSources.js && node --check scripts/validateCampusData.js",
+    "check": "node --check scripts/fetchCampusSources.js && node --check scripts/fetchEducationNews.js && node --check scripts/validateCampusData.js",
+    "fetch:education-news": "node scripts/fetchEducationNews.js",
     "fetch:sources": "node scripts/fetchCampusSources.js",
-    "validate:data": "node scripts/validateCampusData.js",
-    "write:ai-config": "node scripts/write-ai-config.mjs"
+    "validate:data": "node scripts/validateCampusData.js"
   }
 }

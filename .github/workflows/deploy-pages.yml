@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: "30 21 * * *"
   workflow_dispatch:
 
 permissions:
@@ -30,21 +32,17 @@ jobs:
         with:
           node-version: 20
 
-      - name: Write AI config
-        run: npm run write:ai-config
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
-          GEMINI_ENABLE_GOOGLE_SEARCH: ${{ vars.GEMINI_ENABLE_GOOGLE_SEARCH }}
-
       - name: Validate data
         run: npm run validate:data
+
+      - name: Fetch education news
+        run: npm run fetch:education-news
 
       - name: Prepare static site
         run: |
           mkdir -p _site/data
-          cp index.html ai.js ai-config.js "中山國小.jpg" _site/
-          cp data/campus-events.json _site/data/
+          cp index.html "中山國小.jpg" _site/
+          cp data/campus-events.json data/education-news.json _site/data/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

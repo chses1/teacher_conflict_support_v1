@@ -8,25 +8,22 @@
 5. 本工具僅供事件紀錄、溝通與諮詢準備，不取代正式校內程序、主管機關判斷或法律專業意見。
 
 主要功能：
-- 教師心理支持（頁內 AI 或 Google AI Mode 備用提示詞）
+- 教師心理支持（Google AI Mode 提示詞）
 - 事件分級
 - 現場話術卡
 - 事件紀錄產生器（事件紀錄、家長通知、行政協助）
-- 家長通知潤飾（頁內 AI 或 Google AI Mode 備用提示詞）
+- 家長通知潤飾（Google AI Mode 提示詞）
 - 校安事件通報單貼上版
 - 教師自保檢核與避雷
 - 國內判決搜尋輔助
-- 案例搜尋輔助（頁內 AI 或 Google AI Mode 備用提示詞）
+- 案例搜尋輔助（Google AI Mode 提示詞）
 - 一鍵複製、匯出文字檔
 
-單機版 / Gemini AI 模式：
-1. GitHub repository secrets 新增：
-   - GEMINI_API_KEY：Google AI Studio 的免費 Gemini API key
-2. GitHub repository variables 可選新增：
-   - GEMINI_MODEL：預設 gemini-2.5-flash
-   - GEMINI_ENABLE_GOOGLE_SEARCH：預設 true；法律案例整理會使用 Google Search grounding，以降低來源亂編風險。
-3. push 到 main 後，GitHub Actions 會先產生 ai-config.js，再部署 GitHub Pages。
-4. 若沒有設定 API key、額度用完或頁內 AI 暫時失敗，系統會自動改用 Google AI Mode 備用流程。
+Google AI Mode 模式：
+1. 不需要設定 API key。
+2. 家長通知、心理支持與案例搜尋會先產生提示詞。
+3. 系統會自動複製提示詞並開啟 Google AI Mode。
+4. 請在 Google AI Mode 貼上提示詞後送出，再把回覆內容帶回來確認與使用。
 
 半自動校園事件資料更新流程：
 1. 抓取來源並產生審核稿：
@@ -40,8 +37,12 @@
    npm run validate:data
 5. 確認後再部署網站。
 
+教育新聞跑馬燈：
+1. GitHub Actions 會每天台灣時間清晨自動抓取 Google News 台灣教育相關 RSS。
+2. 發布網站會讀取 data/education-news.json，在「台灣校園事件年度摘要」內顯示近期熱門教育新聞。
+3. 點擊新聞標題會開啟來源頁面；內容仍請以來源網站實際頁面為準。
+
 安全提醒：
-- 單機版會把 Gemini API key 打包到前端設定檔；公開網站上的使用者有機會在瀏覽器中看到 key。
-- 建議只使用免費額度 key，並在 Google Cloud / AI Studio 監控用量；若 key 外洩，可停用舊 key 並更換 GitHub secret。
-- Gemini API key 尚未設定、額度用完或頁內 AI 暫時無法使用時，系統會維持原本的 Google AI Mode 複製提示詞備用流程。
+- 本工具不會儲存或上傳事件內容；提示詞會複製到剪貼簿並交由您貼到 Google AI Mode。
+- 回貼給家長、行政或法律諮詢窗口前，請再次確認內容沒有新增未發生的事實，也沒有學生可識別個資。
 - data/drafts/campus-events-draft.json 是人工審核用檔案，不會被 GitHub Pages 部署流程放到正式網站。

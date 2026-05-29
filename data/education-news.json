@@ -1,0 +1,64 @@
+{
+  "updatedAt": "2026-05-29",
+  "sourceLabel": "Google News 台灣教育",
+  "note": "News items are fetched from Google News RSS search results and should be verified on the linked source page.",
+  "items": [
+    {
+      "title": "師疑遭霸凌墜樓 陳其邁提3改善措施 - 中時新聞網",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5wMVZpQ3RNaDM3SzMtZUlvNnlPaUtZcW9jVnU4NXJPWmlXTlYwU1BlblplbjltRE9GMWdfdlJNVk8wWDIwVmJXS0ozRzRrN3YwYldBdnI3dnVORXkzSFNqb1NCMVZ5OHdqVlpV?oc=5",
+      "publishedAt": "2026-05-28T20:10:00.000Z",
+      "sourceName": "中時新聞網",
+      "sourceUrl": "https://www.chinatimes.com"
+    },
+    {
+      "title": "新聞眼／悲劇頻傳 教育部還在坐視 - UDN",
+      "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE5CWjl3MFVsR0d3b01RVF92SGVlbDZNandOV2VXVUVfYXFkZEJ3UlYwanBmN0U0TlJhR3YyZU5Famt5S0dMXzhmbjlYU0Fqd2tvUjJPNm5yaURqdktiMjc0ZkhlUnlaMG1ZU3RqV2RTbG5LdUlVRktBMGNn0gFWQVVfeXFMTVVxd2p0T2xOb3dJX2M4UzFZdGt3LWkzQTNDUHFBb3BhWlZoVWlqLW9VclZ5NUxNLXZCMEx3M2luQ05VQ2pmWFJYRXV5ZDJjdTIya2s0eXc?oc=5",
+      "publishedAt": "2026-05-28T16:08:41.000Z",
+      "sourceName": "UDN",
+      "sourceUrl": "https://udn.com"
+    },
+    {
+      "title": "高雄教師離世 議員促強化支持 - UDN",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFByWjQ1SUxVOEtLV1ZqWnZSQzh4VUQyaXFXZmJmVUdfYzRNd1dtSkZIT19TREZXeWJ0WlpOV01NbVBISnBJbFlrMTNWdDNmdURmRjFoZUlB0gFWQVVfeXFMUHJaNDVJTFU4S0tXVmpadlJDOHhVRDJpcVdmYmZVR19jNE13V21KRkhPX1NERld5YnRaWk5XTU1tUEhKcElsWWsxM1Z0M2Z1RGZGMWhlSUE?oc=5",
+      "publishedAt": "2026-05-28T16:08:37.000Z",
+      "sourceName": "UDN",
+      "sourceUrl": "https://udn.com"
+    },
+    {
+      "title": "國小認真師輕生震驚各界 全教會痛心轟體制：速建校園防護機制、家長課責 | 中華日報 - LINE TODAY",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFA2dDNfLXlac1ZnSGNvMmEzLUFTOVZXTGp0cThfRzRrTWI2WjdLMi1pcGlrcW9jaW96SkFBdHJjaTdET0kxdGt6N0lRVW5nWnVLX25EcHBB?oc=5",
+      "publishedAt": "2026-05-28T13:57:46.000Z",
+      "sourceName": "LINE TODAY",
+      "sourceUrl": "https://today.line.me"
+    },
+    {
+      "title": "高雄某國小教師墜樓亡 網傳「遭霸凌、校方喬事」！校長發聲了 - Yahoo新聞",
+      "url": "https://news.google.com/rss/articles/CBMi-AJBVV95cUxPZXhNX1pubktDUEtqalkxajZPS2dhUHdlWmliWFBaQV9UeEh1YWFDVlJUcUtXaHJFcktBZ05CbEhyaENIYUFTQk1zV0dPdEJGN0gxa1hmbmd6blNfa09PTUtRdDBteWM3MGJMaXZIMUJBTGE4bV9fQ1dncTlVM2VtVnVoTTdfWjdDU0EyNk16OWdMVjViQkx5NmV1Z19xdVY1dVhLX2hhQzVhUk4ydUpjTnRSYjhvYXNZa0czZS1yMU1hckhuQTZsTWFTallqOUt3TlhmeWtEZXBnTkhLc2dvMGFsaE03c2tPcm9jd3ByUW1SMi1aTTA3UElldHN0YjFONlZDc0FUbFl0V0llQ2N6SXBYUGhWMmQxWUlDTkVIWUVKMkUzbVJsVml5WGtyRFhwbERZbjdia1JwRnFaR1N6T28yZkgyeThYVGFXT2tUYk9HOXFUamNEQU9EUVB6di13X25XODduSWJTS0JGaE9UQjZGSzk3dUI2?oc=5",
+      "publishedAt": "2026-05-28T12:45:36.000Z",
+      "sourceName": "Yahoo新聞",
+      "sourceUrl": "https://tw.news.yahoo.com"
+    },
+    {
+      "title": "老師墜樓亡！網瘋傳學校喬事募款 校方發168字「敬告」聲明 - 東森新聞",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBYYmRlZkZYZmZENWs5UDFqc25NNG42ZzY1U1BQTUwyaHhzY2hIeWFmWEZiQ0lvSUVwdHg4WW1DYWd6OUhLQW1oWGZPejh0RW9GV1hpbXdR?oc=5",
+      "publishedAt": "2026-05-28T12:44:00.000Z",
+      "sourceName": "東森新聞",
+      "sourceUrl": "https://news.ebc.net.tw"
+    },
+    {
+      "title": "高雄國小教師墜樓身亡！傳遭學生霸凌、校長壓案 校方回應了 - Yahoo新聞",
+      "url": "https://news.google.com/rss/articles/CBMigwNBVV95cUxOQXdUelF0MFFTOGw2YWF3RjREYW5rVWJrVVdlUDdpY0xXa0dmZDJKWGlLOTI0dGJCMTY3dGY1SWFoSTVfYTJfZmxGQjZ2ZDR5N1NxWDhqNEdpQjFRdXgwd2xkcVRfOXFJUmlVdHlscXJaR0pLQWJBMTZUS2t5cExlT3lzSTlDWUhzcnQ2N2lsQXZNUi01SlBiWDFoZXU0TnZiOGtUb1VPOHdNR2dXWVVzMUZvb2pLWGwyYl9NRkNFM0xqQVppUEdnbDd5bGpRSHVIaDhVVTJsRFdMVkl1SE90TTgySzQtOFNuVlotYndvdnZiZlVPRzlNVTBkbWlId0doTzZtdUlJOE12REd1NjBwV3pWUGRPaERHZFhJMk9POXM1VzVfWTdkYlAzX3BfMkNmbU5uUFR0c2ExZW9lSGRTY2VGWkYtcTlmOFBoc1VpRTllOWV0YU9iVjI1b2Q4d2k0MG1uTFppcHJzeDZjcDBwREJTUFRFUlNyMF9BTE52Z0pEYUU?oc=5",
+      "publishedAt": "2026-05-28T12:08:15.000Z",
+      "sourceName": "Yahoo新聞",
+      "sourceUrl": "https://tw.news.yahoo.com"
+    },
+    {
+      "title": "高雄國小師墜樓 霸凌學生遭爆上月拿美工刀威脅同學？真相曝光 - Yahoo新聞",
+      "url": "https://news.google.com/rss/articles/CBMivgNBVV95cUxNOHE2djNKUmUxMUxtRTRqNWVLRDR1NHUxS1RBMWJWRGFZYTdNMUdSc0c5OXVqejZMd3FTZzFRY2VlRHRadk1ZNmxXTlJQZGxWQjYwOEhrMm9TbDBjV0dqNHpNV3U3eUlvSUl3NFVyeHZjZkxRQ2JtcHRXSmNOWHdVZnZHcHZCbWt1anJoQ0lENjJ0UG55TDJ0TnJHZHZEQlpkOVlyOTAzWkhRSTlaUTlaUHk1LUVsdXpMZVNxVzV6U2FuY3c1Ry15Nnk2YlVvT01TcnhDX3pQMGpGLTF2b0pUSWRQVXMzb3VJbXRGdkFmSTVBZjNUR045UkotWk1uZ1dEaGhVQXYzOWFmRGQwNTVQMFVJWWxZZF8xMV9CMVYySTNZdFhvRjFCcC1DMW1EVnFIQnRUTVhrakxfZWZTdmNyZVgzWVpVc0FrbU5kOHczOWcxOV9SMUlFZVg1dVpiVFRHWnFja0hrQVp4SzFRbGtCUjNvalduVHVJSlRlUTR4TlJqNDdnUy1rdFlYUjBiX01LT3QxV29YQnJjVmxjTnhZTEd6YUpuY1E3X0JvdWZxX090UFhtNFhkVy1SVWRwQQ?oc=5",
+      "publishedAt": "2026-05-28T11:45:42.000Z",
+      "sourceName": "Yahoo新聞",
+      "sourceUrl": "https://tw.news.yahoo.com"
+    }
+  ],
+  "errors": []
+}
