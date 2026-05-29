@@ -361,23 +361,6 @@
     <section id="phrases" class="card page">
       <h2>🗣️ 現場話術卡</h2>
       <p class="section-note">依近年常見師生衝突情境整理。句子設計原則：不互嗆、不羞辱、不激怒，先穩住安全界線。</p>
-      <div class="two-col">
-        <div>
-          <label>自訂情境</label>
-          <textarea id="phraseContext" placeholder="例：學生在全班面前大聲說老師不公平，拒絕回座位，旁邊同學開始起鬨。"></textarea>
-        </div>
-        <div>
-          <label>年級 / 對象</label>
-          <input id="phraseAudience" placeholder="例：高年級學生、家長到校、兩名學生衝突" />
-          <label>希望語氣</label>
-          <input id="phraseTone" placeholder="例：堅定但不激怒、溫和設界線、先安撫再請求協助" />
-        </div>
-      </div>
-      <div class="form-actions">
-        <button onclick="openPhraseAiMode()">AI 產生話術</button>
-        <button class="secondary" onclick="copyText('phraseOutput')">複製提示詞</button>
-      </div>
-      <div id="phraseOutput" class="output light">請輸入自訂情境。系統會複製提示詞並開啟 Google AI Mode，協助產生適合教師現場使用的回應話語。</div>
       <div class="phrase-grid">
         <details open><summary>1. 學生嗆聲、質疑老師權限</summary><div class="quote">我聽到你現在很不滿。你可以不同意老師，但我們不在課堂上互相攻擊。現在先把聲音放低、回到位置，等下課後我會聽你說清楚。</div></details>
         <details><summary>2. 學生辱罵、講髒話或羞辱老師</summary><div class="quote">我會先停止這段對話，因為現在的用語已經不適合繼續談。你可以表達生氣，但不能用辱罵方式。請先停下來，我們等情緒降下來再處理。</div></details>
@@ -390,6 +373,16 @@
         <details><summary>9. 全班圍觀、起鬨、錄影</summary><div class="quote">全班回到自己的位置，手機收起來。現在不是圍觀或轉傳的時間，我們要先保護每個人的安全和隱私。這件事會由老師和行政處理。</div></details>
         <details><summary>10. 家長到校情緒激動或要求立即處理</summary><div class="quote">我知道您很擔心孩子。為了讓事情處理清楚，也保護孩子，我們先到辦公室，請行政人員一起在場。老師會提供紀錄，並一起確認後續處理。</div></details>
       </div>
+      <details class="compact-detail">
+        <summary>AI 產生自訂情境話術</summary>
+        <label>自訂情境</label>
+        <textarea id="phraseContext" placeholder="例：學生在全班面前大聲說老師不公平，拒絕回座位，旁邊同學開始起鬨。"></textarea>
+        <div class="form-actions">
+          <button onclick="openPhraseAiMode()">AI 產生話術</button>
+          <button class="secondary" onclick="copyText('phraseOutput')">複製提示詞</button>
+        </div>
+        <div id="phraseOutput" class="output light">請先優先使用上方已整理好的話術卡。若情境不在卡片中，再輸入自訂情境，系統會複製提示詞並開啟 Google AI Mode。</div>
+      </details>
     </section>
 
     <section id="record" class="card page">
@@ -469,7 +462,7 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const fields = ['date','hour','minute','location','student','incidentProcess','teacherAction','phraseContext','phraseAudience','phraseTone'];
+  const fields = ['date','hour','minute','location','student','incidentProcess','teacherAction','phraseContext'];
 
   function todayISO() {
     const d = new Date();
@@ -753,9 +746,7 @@
 
   function phraseAiPrompt() {
     const context = safe(val('phraseContext'), '老師遇到一個需要現場降溫與設界線的校園衝突情境');
-    const audience = safe(val('phraseAudience'), '學生或相關人員');
-    const tone = safe(val('phraseTone'), '堅定、溫和、不羞辱、不激怒');
-    return `我是一位台灣國小老師，請協助我依以下情境，設計可以現場使用的教師回應話語。\n\n情境：${context}\n年級或對象：${audience}\n希望語氣：${tone}\n\n請遵守：\n1. 語氣要像真實老師可以說出口的話，不要像公文或標語。\n2. 不要羞辱學生，不要威脅，不要激怒，不要互嗆。\n3. 先穩住安全與秩序，再表達界線，最後給學生可執行的下一步。\n4. 若情境有安全疑慮，請加入請其他學生保持距離、找行政或其他成人協助的話語。\n5. 不要新增未出現在情境中的事實。\n\n請用以下格式回答：\n一、現場第一句話：給我 3 種版本，每句 30 字以內。\n二、接續引導：給我 3 句可以接著說的話。\n三、設界線但不激怒：給我 3 句。\n四、需要求援時：給我 2 句可以對學生或全班說的話。\n五、避免說出口的話：列 5 句高風險說法，並改寫成較安全版本。`;
+    return `我是一位台灣國小老師，請協助我依以下校園現場情境，設計可以對國小學生說出口的安全回應話語。\n\n情境：${context}\n\n請你用「溫和但是堅定原則」的教師語氣回答。目標是讓老師保有界線與專業，不讓老師覺得只能委屈忍耐；同時不要激怒學生、不要互嗆、不要羞辱、不要貼標籤、不要威脅。\n\n請遵守：\n1. 每句要短，長度接近一般現場話術卡，可以直接說出口。\n2. 不要長篇分析，不要解釋理論，不要寫成公文。\n3. 先穩住安全與秩序，再清楚說明界線，最後給學生一個現在做得到的下一步。\n4. 不要新增未出現在情境中的事實，也不要判定學生故意、惡意、違法或有罪。\n\n請只輸出以下內容：\n一、建議話術 3 句：每句 50 字以內。\n二、情況升高時 2 句：每句 50 字以內。\n三、避免說法 2 組：每組包含「不要說」與「改成說」，每句 35 字以內。`;
   }
 
   async function runAiOrFallback(options) {
