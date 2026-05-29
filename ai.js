@@ -1,5 +1,6 @@
 import {
   geminiApiKey,
+  geminiEnableGoogleSearch,
   geminiModel
 } from "./ai-config.js";
 
@@ -8,7 +9,7 @@ const verifyAiButton = document.getElementById("verifyAiButton");
 
 const isPlaceholder = (value) => !value || String(value).includes("REPLACE_WITH_");
 const configured = !isPlaceholder(geminiApiKey);
-const model = geminiModel || "gemini-2.0-flash";
+const model = geminiModel || "gemini-2.5-flash";
 
 function setStatus(text) {
   if (!statusEl) return;
@@ -19,6 +20,21 @@ function setStatus(text) {
 
 async function callGemini(prompt, options = {}) {
   if (!configured) throw new Error("尚未設定 Gemini API key。");
+  const body = {
+    contents: [
+      {
+        role: "user",
+        parts: [{ text: prompt }]
+      }
+    ],
+    generationConfig: {
+      temperature: options.temperature ?? 0.4,
+      maxOutputTokens: options.maxOutputTokens ?? 1200
+    }
+  };
+  if (options.googleSearch && geminiEnableGoogleSearch) {
+    body.tools = [{ google_search: {} }];
+  }
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(geminiApiKey)}`,
     {
@@ -26,35 +42,36 @@ async function callGemini(prompt, options = {}) {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: prompt }]
-          }
-        ],
-        generationConfig: {
-          temperature: options.temperature ?? 0.4,
-          maxOutputTokens: options.maxOutputTokens ?? 1200
-        }
-      })
+      body: JSON.stringify(body)
     }
   );
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(data?.error?.message || "AI 服務暫時無法使用。");
+    const error = new Error(data?.error?.message || "AI 服務暫時無法使用。");
+    error.status = response.status;
+    error.code = data?.error?.code || response.status;
+    throw error;
   }
   const text = data?.candidates?.[0]?.content?.parts
     ?.map((part) => part.text || "")
     .join("")
     .trim();
   if (!text) throw new Error("AI 沒有回傳文字，請稍後再試。");
-  return text;
+  const metadata = data?.candidates?.[0]?.groundingMetadata || data?.candidates?.[0]?.grounding_metadata;
+  const chunks = metadata?.groundingChunks || metadata?.grounding_chunks || [];
+  const sources = chunks
+    .map((chunk) => chunk.web || chunk.retrievedContext || chunk.retrieved_context || null)
+    .filter(Boolean)
+    .map((source) => ({
+      title: source.title || source.uri || "資料來源",
+      uri: source.uri || ""
+    }))
+    .filter((source) => source.uri);
+  return { text, sources };
 }
 
-async function generateText(prompt) {
-  const text = await callGemini(prompt);
-  return { text };
+async function generateText(prompt, options = {}) {
+  return callGemini(prompt, options);
 }
 
 async function verifyApiKey() {

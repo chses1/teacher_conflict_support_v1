@@ -13,7 +13,8 @@
 1. GitHub repository secrets 新增：
    - `GEMINI_API_KEY`：Google AI Studio 的免費 Gemini API key
 2. GitHub repository variables 可選新增：
-   - `GEMINI_MODEL`：預設 `gemini-2.0-flash`
+   - `GEMINI_MODEL`：預設 `gemini-2.5-flash`
+   - `GEMINI_ENABLE_GOOGLE_SEARCH`：預設 `true`；法律案例整理會使用 Google Search grounding，以降低來源亂編風險。
 3. push 到 `main` 後，GitHub Actions 會先產生 `ai-config.js`，再部署 GitHub Pages。
 4. 若沒有設定 API key、額度用完或頁內 AI 暫時失敗，系統會自動改用 Google AI Mode 備用流程。
 
