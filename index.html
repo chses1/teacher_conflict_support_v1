@@ -169,7 +169,8 @@
     .form-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
     .output {
       white-space: pre-wrap; background: #0f172a; color: #e5e7eb; border-radius: 18px; padding: 16px;
-      min-height: 120px; overflow: auto; line-height: 1.75;
+      min-height: 180px; max-height: min(48vh, 560px); overflow-y: auto; overflow-x: hidden; line-height: 1.75;
+      overscroll-behavior: contain; scrollbar-gutter: stable; -webkit-overflow-scrolling: touch;
     }
     .output.light { background: #f8fafc; color: var(--ink); border: 1px solid var(--line); }
     .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
@@ -242,6 +243,7 @@
       .auth-panel { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
       .auth-status { max-width: 100%; }
       .navbtn { min-height: 82px; padding: 13px 14px; }
+      .output { max-height: 54vh; }
       section { scroll-margin-top: 128px; }
     }
     @media print {
