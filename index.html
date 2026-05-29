@@ -216,6 +216,28 @@
       font-size: 16px;
     }
     .step strong { display: block; margin-bottom: 4px; color: var(--primary); }
+    .support-stages {
+      display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; margin: 12px 0 16px;
+    }
+    .support-stage {
+      background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 12px; font-size: 15px;
+    }
+    .support-stage strong { display: block; margin-bottom: 4px; color: var(--purple); font-size: 16px; }
+    .support-alert {
+      margin: 12px 0 16px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 16px; padding: 14px 16px;
+    }
+    .support-alert h3 { margin: 0 0 8px; color: #9a3412; font-size: 20px; }
+    .support-alert ul { margin: 8px 0 0; padding-left: 1.25em; }
+    .support-alert li { margin: 4px 0; }
+    .support-resources {
+      margin: 12px 0 16px; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px;
+    }
+    .support-resource {
+      background: #f8fafc; border: 1px solid var(--line); border-radius: 16px; padding: 12px; font-size: 15px;
+    }
+    .support-resource strong { display: block; margin-bottom: 6px; color: var(--primary); font-size: 16px; }
+    .support-resource a { color: var(--primary); font-weight: 900; text-decoration: none; }
+    .support-resource a:hover { text-decoration: underline; }
     .law-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
     .law-card {
       background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 16px;
@@ -244,7 +266,7 @@
     }
     .toast.show { opacity: 1; transform: translateY(0); }
     @media (max-width: 900px) {
-      .hero, .levels, .grid.buttons, .campus-data-grid, .phrase-grid, .form-grid, .time-grid, .two-col, .law-grid, .search-links, .steps { grid-template-columns: 1fr; }
+      .hero, .levels, .grid.buttons, .campus-data-grid, .phrase-grid, .form-grid, .time-grid, .two-col, .law-grid, .search-links, .steps, .support-stages, .support-resources { grid-template-columns: 1fr; }
       .campus-data-heading { display: block; }
       .campus-data-meta { justify-content: flex-start; margin-top: 8px; }
       .education-news-header { align-items: flex-start; flex-direction: column; gap: 2px; }
@@ -441,10 +463,58 @@
     <section id="support" class="card page">
       <h2>💬 教師心理支持</h2>
       <p class="section-note">把事件紀錄整理成心理支持提示詞，交給 Google AI Mode 協助老師先被接住、整理委屈與下一步。AI 不能取代心理師或正式諮商。</p>
+      <div class="support-stages" aria-label="老師可能正在經歷的心理階段">
+        <div class="support-stage"><strong>1. 先穩住</strong>震驚、警覺、撐住現場是正常反應。</div>
+        <div class="support-stage"><strong>2. 先放下</strong>委屈、受傷、想哭或生氣，不代表不專業。</div>
+        <div class="support-stage"><strong>3. 先別怪自己</strong>自我懷疑很常見，不等於處理失敗。</div>
+        <div class="support-stage"><strong>4. 先找支援</strong>不平、疲憊、麻木時，不要一個人扛。</div>
+        <div class="support-stage"><strong>5. 再重建</strong>整理事實、界線、支援與下一步。</div>
+      </div>
+      <div class="support-alert">
+        <h3>出現這些狀況，請找真人協助</h3>
+        <p class="mini">以下不是診斷，而是提醒：若持續出現或影響生活，請不要等到撐不住才求助。</p>
+        <ul>
+          <li>連續多天睡不好、一直驚醒，或上班前明顯焦慮、胃痛、胸悶。</li>
+          <li>反覆回想事件、一直自責，停不下來想「是不是都是我的錯」。</li>
+          <li>看到學生、家長訊息或進教室就緊繃、想逃避，已影響教學。</li>
+          <li>情緒變得麻木、易怒、想哭，或對原本在意的事都失去力氣。</li>
+          <li>出現傷害自己、不想活、希望自己消失等念頭，請立即找人陪同並撥打 1925 安心專線或 119。</li>
+        </ul>
+      </div>
+      <div class="support-resources" aria-label="教師心理支持資源">
+        <div class="support-resource">
+          <strong>中山國小校內：先找人陪</strong>
+          可信任同事、學年夥伴或行政同仁，先陪您離開高壓現場、補位看班、一起整理事實。
+        </div>
+        <div class="support-resource">
+          <strong>中山國小校內：輔導室與行政</strong>
+          輔導室可先做情緒支持、初談與轉介；學務處、生教組、主任或校長可協助校安程序與家長溝通。
+        </div>
+        <div class="support-resource">
+          <strong>桃園市教育局：教師支持方案</strong>
+          可查詢<a href="https://ttsc.whjhs.tyc.edu.tw/" target="_blank" rel="noopener">桃園市政府教育局教師諮商輔導支持服務</a>，依當年度方案申請心理諮商、諮詢或工作坊。
+        </div>
+        <div class="support-resource">
+          <strong>教育部：教師諮商輔導支持中心</strong>
+          可查詢<a href="https://tcare.notion.site/" target="_blank" rel="noopener">教育部教師諮商輔導支持中心</a>，確認適用對象與當年度個別諮商、團體或專業諮詢服務。
+        </div>
+        <div class="support-resource">
+          <strong>桃園區附近：社區心理衛生中心</strong>
+          桃園區社區心理衛生中心位於桃園區崇法街 6 號，可查詢<a href="https://mental.tycg.gov.tw/default.aspx" target="_blank" rel="noopener">桃園市社區心理衛生中心</a>服務與轉介資訊。
+        </div>
+        <div class="support-resource">
+          <strong>校外自費：心理師或身心科</strong>
+          若已影響睡眠、上班或身體反應，可預約合格心理師、諮商所或身心科，提早處理比硬撐更安全。
+        </div>
+        <div class="support-resource">
+          <strong>危機支持：立即找人陪</strong>
+          情緒很滿可撥 1980 張老師、1995 生命線、1925 安心專線；若有自傷危險，請找人陪同並撥 119。
+        </div>
+      </div>
       <div class="steps" aria-label="心理支持操作步驟">
-        <div class="step"><strong>1. 留一點輪廓</strong>不用寫完美，先把發生了什麼簡單放下來。</div>
-        <div class="step"><strong>2. 接住感受</strong>按心理支持，先整理委屈、擔心與下一步。</div>
-        <div class="step"><strong>3. 找真人陪</strong>若已撐不住，請直接找同事、行政或專業協助。</div>
+        <div class="step"><strong>1. 留下輪廓</strong>不用寫完美，先把事件放下來。</div>
+        <div class="step"><strong>2. 看見反應</strong>確認自己可能正在哪個心理階段。</div>
+        <div class="step"><strong>3. 帶著支持往前</strong>用 AI 提示詞整理感受、事實與下一步。</div>
       </div>
       <div class="form-actions">
         <button onclick="openTeacherSupport()">AI 心理支持</button>
@@ -793,7 +863,7 @@
 
   function teacherSupportPrompt() {
     const d = neutralizedRecordData();
-    return `我是一位老師，今天在校園事件中感到委屈、挫折和不被理解。請用溫和、支持、非批判的語氣陪我整理情緒。\n\n請你：\n1. 先接住我的感受，不要急著給建議。\n2. 幫我區分「事實」、「我的感受」、「我擔心的事」。\n3. 用不責怪自己的方式，幫我重寫內在對話。\n4. 給我 3 個現在可以做的小步驟，例如呼吸、暫停回訊息、找可信任同事陪同。\n5. 提醒我哪些情況應該找真人支持，例如主任、輔導室、教師會、心理師或安心專線。\n6. 不要做診斷，不要說我有任何疾病。\n\n事件大致如下：\n時間：${d.date}，${d.time}\n地點：${d.location}\n事件關係人：${d.student}\n事件原因與經過：${d.incidentProcess}\n老師處理情形：${d.teacherAction}\n\n我現在最難受的是：`;
+    return `我是一位桃園市桃園區中山國小老師，今天在校園事件中感到委屈、挫折和不被理解。請用溫和、支持、非批判的語氣陪我整理情緒。\n\n請依照事件後常見心理歷程回應：\n1. 先接住我的感受，不要急著叫我反省或給建議。\n2. 判斷我可能正在經歷哪個階段：先穩住、先放下、先別怪自己、先找支援、再重建。請用「可能」描述，不要當成診斷。\n3. 幫我區分「事實」、「我的感受」、「我擔心的事」、「我正在責怪自己的地方」。\n4. 用不責怪老師的方式，幫我重寫內在對話，讓我知道自我懷疑不等於失職。\n5. 給我 3 個現在可以做的小步驟，例如呼吸、暫停回訊息、找可信任同事陪同、先把事實留下來。\n6. 依序提醒我可運用的真人支持：中山國小校內同事與輔導室、學務處或主任、桃園市政府教育局教師諮商輔導支持服務、教育部教師諮商輔導支持中心、桃園市社區心理衛生中心、合格心理師或身心科。\n7. 提醒我哪些情況應該找真人支持：連續多天失眠或驚醒、反覆回想事件且停不下來自責、進教室或看到訊息就明顯緊繃逃避、情緒麻木易怒或一直想哭、出現傷害自己或不想活的念頭。\n8. 若出現自傷或不想活的念頭，請明確提醒我立即找人陪同，並撥打 1925 安心專線或 119。\n9. 不要做診斷，不要說我有任何疾病。\n\n事件大致如下：\n時間：${d.date}，${d.time}\n地點：${d.location}\n事件關係人：${d.student}\n事件原因與經過：${d.incidentProcess}\n老師處理情形：${d.teacherAction}\n\n我現在最難受的是：`;
   }
 
   async function openTeacherSupport() {
